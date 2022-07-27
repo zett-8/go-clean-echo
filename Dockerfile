@@ -1,5 +1,6 @@
 FROM golang:1.18-alpine as base
 
+ENV GO_ENV=development
 ENV GO111MODULE=on
 
 WORKDIR /app/go/base
@@ -21,6 +22,8 @@ COPY --from=base /app/go/base /app/go/builder
 RUN CGO_ENABLED=0 go build main.go
 
 FROM alpine as production
+
+ENV GO_ENV=production
 
 WORKDIR /app/go/src
 

@@ -1,6 +1,7 @@
 version: "3.4"
 services:
   echo-server:
+    container_name: "echo-server"
     build:
       context: .
       target: base
@@ -9,3 +10,19 @@ services:
       - "8080:8080"
     volumes:
       - .:/app/go/base
+    depends_on:
+     - echo-db
+
+  echo-db:
+    container_name: "echo-db"
+    image: postgres:14
+    restart: always
+    tty: true
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres:/data/echo-postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
