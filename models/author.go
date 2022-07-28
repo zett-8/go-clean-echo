@@ -1,7 +1,7 @@
 package models
 
 type Author struct {
-	id      int    `json:"id"`
-	name    string `json:"name"`
-	country string `json:"country"`
+	ID      int    `json:"id"`
+	Name    string `json:"name"`
+	Country string `json:"country"`
 }

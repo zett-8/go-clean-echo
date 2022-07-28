@@ -2,7 +2,6 @@ package store
 
 import (
 	"database/sql"
-	"fmt"
 	"github.com/zett-8/go-echo-without-orm/models"
 	"log"
 )
@@ -17,22 +16,25 @@ func NewAuthorStore(db *sql.DB) *AuthorStore {
 	}
 }
 
-func (s *AuthorStore) Get() (string, error) {
-	var author *models.Author
+func (s *AuthorStore) Get() ([]*models.Author, error) {
+	var authors []*models.Author
 
 	rows, err := s.db.Query("SELECT id, name, country from authors")
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		err := rows.Scan(&author)
+		author := &models.Author{}
+
+		err := rows.Scan(&author.ID, &author.Name, &author.Country)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(author)
+
+		authors = append(authors, author)
 	}
 
-	return "everything's done", nil
+	return authors, nil
 }

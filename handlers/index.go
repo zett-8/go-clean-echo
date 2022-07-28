@@ -5,8 +5,8 @@ import (
 	"net/http"
 )
 
-func Set(e *echo.Echo) {
+func NewIndexHandler(e *echo.Echo) {
 	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello world")
+		return c.String(http.StatusOK, "Hello World")
 	})
 }

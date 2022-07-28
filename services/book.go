@@ -6,17 +6,17 @@ import (
 	"net/http"
 )
 
-type AuthorService struct {
-	store *store.AuthorStore
+type BookService struct {
+	store *store.BookStore
 }
 
-func NewAuthorService(s *store.AuthorStore) *AuthorService {
-	return &AuthorService{
+func NewBookService(s *store.BookStore) *BookService {
+	return &BookService{
 		store: s,
 	}
 }
 
-func (s *AuthorService) GetAuthors(c echo.Context) error {
+func (s *BookService) GetBooks(c echo.Context) error {
 	r, err := s.store.Get()
 
 	if err != nil {
