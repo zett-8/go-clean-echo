@@ -2,7 +2,7 @@ package services
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/zett-8/go-echo-without-orm/store"
+	"github.com/zett-8/go-clean-echo/store"
 	"net/http"
 )
 

@@ -1,39 +1,27 @@
 package store
 
 import (
-	"database/sql"
-	"github.com/zett-8/go-echo-without-orm/models"
-	"log"
+	"github.com/jmoiron/sqlx"
+	"github.com/zett-8/go-clean-echo/models"
 )
 
 type AuthorStore struct {
-	db *sql.DB
+	db *sqlx.DB
 }
 
-func NewAuthorStore(db *sql.DB) *AuthorStore {
+func NewAuthorStore(db *sqlx.DB) *AuthorStore {
 	return &AuthorStore{
 		db: db,
 	}
 }
 
 func (s *AuthorStore) Get() ([]*models.Author, error) {
-	var authors []*models.Author
+	authors := make([]*models.Author, 0)
 
-	rows, err := s.db.Query("SELECT id, name, country from authors")
+	err := s.db.Select(&authors, "SELECT id, name, country from authors")
+
 	if err != nil {
 		return nil, err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		author := &models.Author{}
-
-		err := rows.Scan(&author.ID, &author.Name, &author.Country)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		authors = append(authors, author)
 	}
 
 	return authors, nil

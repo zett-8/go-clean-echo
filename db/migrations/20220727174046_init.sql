@@ -18,6 +18,6 @@ CREATE TABLE books (
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE authors;
 DROP TABLE books;
+DROP TABLE authors;
 -- +goose StatementEnd

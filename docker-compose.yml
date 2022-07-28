@@ -7,7 +7,7 @@ services:
       target: base
     command: "air"
     ports:
-      - "8080:8080"
+      - "8888:8888"
     volumes:
       - .:/app/go/base
     depends_on:

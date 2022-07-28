@@ -5,10 +5,11 @@ import (
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	database "github.com/zett-8/go-echo-without-orm/db"
-	"github.com/zett-8/go-echo-without-orm/handlers"
-	"github.com/zett-8/go-echo-without-orm/services"
-	"github.com/zett-8/go-echo-without-orm/store"
+	database "github.com/zett-8/go-clean-echo/db"
+	"github.com/zett-8/go-clean-echo/handlers"
+	"github.com/zett-8/go-clean-echo/services"
+	"github.com/zett-8/go-clean-echo/store"
+	"log"
 	"os"
 )
 
@@ -20,7 +21,7 @@ func main() {
 
 	db, err := database.Load()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	defer db.Close()
 
@@ -29,6 +30,9 @@ func main() {
 	e.Use(middleware.Gzip())
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+	}))
 
 	authorStore := store.NewAuthorStore(db)
 	bookStore := store.NewBooksStore(db)
@@ -40,5 +44,10 @@ func main() {
 	handlers.NewBookHandler(e, bookService)
 	handlers.NewIndexHandler(e)
 
-	e.Logger.Fatal(e.Start(":8080"))
+	PORT := os.Getenv("PORT")
+	if PORT == "" {
+		PORT = "8888"
+	}
+
+	log.Fatal(e.Start(":" + PORT))
 }
