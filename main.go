@@ -3,12 +3,11 @@ package main
 import (
 	"fmt"
 	_ "github.com/jackc/pgx/v4/stdlib"
-	echoSwagger "github.com/swaggo/echo-swagger"
 	database "github.com/zett-8/go-clean-echo/db"
 	_ "github.com/zett-8/go-clean-echo/docs"
 	"github.com/zett-8/go-clean-echo/handlers"
 	"github.com/zett-8/go-clean-echo/services"
-	"github.com/zett-8/go-clean-echo/store"
+	"github.com/zett-8/go-clean-echo/stores"
 	"log"
 	"os"
 )
@@ -26,26 +25,17 @@ var GO_ENV = os.Getenv("GO_ENV")
 func main() {
 	fmt.Println("GO_ENV:", GO_ENV)
 
-	db, err := database.New()
+	db, err := database.New(GO_ENV == "development")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
 
-	e := handlers.New()
-	v1 := e.Group("/api/v1")
+	e := handlers.Echo()
 
-	authorStore := store.NewAuthorStore(db)
-	bookStore := store.NewBooksStore(db)
-
-	authorService := services.NewAuthorService(authorStore)
-	bookService := services.NewBookService(bookStore)
-
-	handlers.NewAuthorHandler(v1, authorService)
-	handlers.NewBookHandler(v1, bookService)
-	handlers.NewIndexHandler(e)
-
-	e.GET("/swagger/*", echoSwagger.WrapHandler)
+	s := stores.New(db)
+	ss := services.New(s)
+	handlers.New(e, ss)
 
 	PORT := os.Getenv("PORT")
 	if PORT == "" {

@@ -1,4 +1,4 @@
-package store
+package stores
 
 import (
 	"database/sql"
@@ -7,19 +7,13 @@ import (
 )
 
 type AuthorStore struct {
-	db *sqlx.DB
-}
-
-func NewAuthorStore(db *sqlx.DB) *AuthorStore {
-	return &AuthorStore{
-		db: db,
-	}
+	*sqlx.DB
 }
 
 func (s *AuthorStore) Get() ([]*models.Author, error) {
 	authors := make([]*models.Author, 0)
 
-	err := s.db.Select(&authors, "SELECT id, name, country from authors")
+	err := s.Select(&authors, "SELECT id, name, country from authors")
 
 	if err != nil {
 		return nil, err
@@ -35,7 +29,7 @@ func (s *AuthorStore) DeleteById(id int) error {
 		RETURNING authors.id;
 `
 
-	row, err := s.db.Exec(query, id)
+	row, err := s.Exec(query, id)
 	if err != nil {
 		return err
 	}

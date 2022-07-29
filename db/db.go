@@ -2,17 +2,16 @@ package db
 
 import (
 	"fmt"
+	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/jmoiron/sqlx"
 	"github.com/pressly/goose/v3"
 	"io/ioutil"
-	"os"
+	"log"
 )
 
-var GO_ENV = os.Getenv("GO_ENV")
-
-func New() (*sqlx.DB, error) {
+func New(development bool) (*sqlx.DB, error) {
 	var uri string
-	if GO_ENV == "development" {
+	if development {
 		uri = "postgres://postgres:postgres@echo-db:5432/postgres?sslmode=disable"
 	} else {
 		uri = "postgres://postgres:postgres@echo-db:5432/postgres?sslmode=disable"
@@ -33,7 +32,8 @@ func New() (*sqlx.DB, error) {
 		return nil, err
 	}
 
-	if GO_ENV == "development" {
+	// Run all seed sql file if on dev
+	if development {
 		seedFiles, err := ioutil.ReadDir("db/seed/")
 		if err != nil {
 			fmt.Println(err)
@@ -62,4 +62,14 @@ func New() (*sqlx.DB, error) {
 	}
 
 	return db, nil
+}
+
+func Mock() (*sqlx.DB, sqlmock.Sqlmock) {
+	db, mock, err := sqlmock.New()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return sqlx.NewDb(db, "sqlmock"), mock
 }

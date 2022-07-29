@@ -1,4 +1,4 @@
-package store
+package stores
 
 import (
 	"database/sql"
@@ -6,14 +6,11 @@ import (
 	"github.com/zett-8/go-clean-echo/models"
 )
 
-type BookStore struct {
-	db *sqlx.DB
+type BookS interface {
 }
 
-func NewBooksStore(db *sqlx.DB) *BookStore {
-	return &BookStore{
-		db: db,
-	}
+type BookStore struct {
+	*sqlx.DB
 }
 
 func (s *BookStore) Get() ([]*models.Book, error) {
@@ -21,7 +18,7 @@ func (s *BookStore) Get() ([]*models.Book, error) {
 
 	query := "SELECT id, name, author_id from books;"
 
-	err := s.db.Select(&books, query)
+	err := s.Select(&books, query)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +33,7 @@ func (s *BookStore) DeleteById(id int) error {
 		RETURNING books.id;
 `
 
-	row, err := s.db.Exec(query, id)
+	row, err := s.Exec(query, id)
 	if err != nil {
 		return err
 	}

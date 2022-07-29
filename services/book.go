@@ -3,20 +3,14 @@ package services
 import (
 	"database/sql"
 	"github.com/labstack/echo/v4"
-	"github.com/zett-8/go-clean-echo/store"
+	"github.com/zett-8/go-clean-echo/stores"
 	"log"
 	"net/http"
 	"strconv"
 )
 
 type BookService struct {
-	store *store.BookStore
-}
-
-func NewBookService(s *store.BookStore) *BookService {
-	return &BookService{
-		store: s,
-	}
+	store *stores.BookStore
 }
 
 // GetBooks

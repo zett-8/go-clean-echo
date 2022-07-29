@@ -3,20 +3,14 @@ package services
 import (
 	"database/sql"
 	"github.com/labstack/echo/v4"
-	"github.com/zett-8/go-clean-echo/store"
+	"github.com/zett-8/go-clean-echo/stores"
 	"log"
 	"net/http"
 	"strconv"
 )
 
 type AuthorService struct {
-	store *store.AuthorStore
-}
-
-func NewAuthorService(s *store.AuthorStore) *AuthorService {
-	return &AuthorService{
-		store: s,
-	}
+	store *stores.AuthorStore
 }
 
 // GetAuthors
