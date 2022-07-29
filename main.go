@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	_ "github.com/jackc/pgx/v4/stdlib"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
 	database "github.com/zett-8/go-clean-echo/db"
 	_ "github.com/zett-8/go-clean-echo/docs"
@@ -13,7 +11,6 @@ import (
 	"github.com/zett-8/go-clean-echo/store"
 	"log"
 	"os"
-	"strings"
 )
 
 var GO_ENV = os.Getenv("GO_ENV")
@@ -27,7 +24,6 @@ var GO_ENV = os.Getenv("GO_ENV")
 // @BasePath /
 // @schemes http
 func main() {
-
 	fmt.Println("GO_ENV:", GO_ENV)
 
 	db, err := database.New()
@@ -36,23 +32,7 @@ func main() {
 	}
 	defer db.Close()
 
-	e := echo.New()
-
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-	e.Pre(middleware.RemoveTrailingSlash())
-	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
-	}))
-	e.Use(middleware.GzipWithConfig(middleware.GzipConfig{
-		Skipper: func(c echo.Context) bool {
-			if strings.Contains(c.Request().URL.Path, "swagger") {
-				return true
-			}
-			return false
-		},
-	}))
-
+	e := handlers.New()
 	v1 := e.Group("/api/v1")
 
 	authorStore := store.NewAuthorStore(db)
