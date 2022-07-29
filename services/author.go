@@ -9,7 +9,7 @@ type AuthorService struct {
 	store *stores.AuthorStore
 }
 
-func (s *AuthorService) GetAuthors() ([]*models.Author, error) {
+func (s *AuthorService) GetAuthors() ([]models.Author, error) {
 	r, err := s.store.Get()
 	return r, err
 }

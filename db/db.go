@@ -1,15 +1,15 @@
 package db
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/jmoiron/sqlx"
 	"github.com/pressly/goose/v3"
 	"io/ioutil"
 	"log"
 )
 
-func New(development bool) (*sqlx.DB, error) {
+func New(development bool) (*sql.DB, error) {
 	var uri string
 	if development {
 		uri = "postgres://postgres:postgres@echo-db:5432/postgres?sslmode=disable"
@@ -17,7 +17,7 @@ func New(development bool) (*sqlx.DB, error) {
 		uri = "postgres://postgres:postgres@echo-db:5432/postgres?sslmode=disable"
 	}
 
-	db, err := sqlx.Open("pgx", uri)
+	db, err := sql.Open("pgx", uri)
 	if err != nil {
 		return nil, err
 	}
@@ -27,7 +27,7 @@ func New(development bool) (*sqlx.DB, error) {
 		return nil, err
 	}
 
-	if err := goose.Up(db.DB, "db/migrations"); err != nil {
+	if err := goose.Up(db, "db/migrations"); err != nil {
 		db.Close()
 		return nil, err
 	}
@@ -64,17 +64,15 @@ func New(development bool) (*sqlx.DB, error) {
 	return db, nil
 }
 
-func Mock() (*sqlx.DB, sqlmock.Sqlmock) {
-	_db, mock, err := sqlmock.New()
-
+func Mock() (*sql.DB, sqlmock.Sqlmock) {
+	db, mock, err := sqlmock.New()
+	//db := sql.Open("sqlmock", sqlmock.dsn)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	db := sqlx.NewDb(_db, "pgx")
-
-	_ = goose.SetDialect("postgres")
-	_ = goose.Up(db.DB, "db/migrations")
+	_ = goose.SetDialect("sqlmock")
+	_ = goose.Up(db, "db/migrations")
 
 	return db, mock
 }

@@ -9,7 +9,7 @@ type BookService struct {
 	store *stores.BookStore
 }
 
-func (s *BookService) GetBooks() ([]*models.Book, error) {
+func (s *BookService) GetBooks() ([]models.Book, error) {
 	r, err := s.store.Get()
 	return r, err
 }

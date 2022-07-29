@@ -2,21 +2,26 @@ package stores
 
 import (
 	"database/sql"
-	"github.com/jmoiron/sqlx"
 	"github.com/zett-8/go-clean-echo/models"
 )
 
 type AuthorStore struct {
-	*sqlx.DB
+	*sql.DB
 }
 
-func (s *AuthorStore) Get() ([]*models.Author, error) {
-	authors := make([]*models.Author, 0)
+func (s *AuthorStore) Get() ([]models.Author, error) {
+	authors := make([]models.Author, 0)
 
-	err := s.Select(&authors, "SELECT id, name, country from authors")
+	rows, err := s.Query("SELECT id, name, country from authors")
 
 	if err != nil {
 		return nil, err
+	}
+
+	for rows.Next() {
+		var a models.Author
+		err = rows.Scan(&a.ID, &a.Name, &a.Country)
+		authors = append(authors, a)
 	}
 
 	return authors, nil

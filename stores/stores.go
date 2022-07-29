@@ -1,13 +1,15 @@
 package stores
 
-import "github.com/jmoiron/sqlx"
+import (
+	"database/sql"
+)
 
 type Stores struct {
 	AuthorStore
 	BookStore
 }
 
-func New(db *sqlx.DB) *Stores {
+func New(db *sql.DB) *Stores {
 	return &Stores{
 		AuthorStore: AuthorStore{db},
 		BookStore:   BookStore{db},

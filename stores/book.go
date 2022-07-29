@@ -2,25 +2,27 @@ package stores
 
 import (
 	"database/sql"
-	"github.com/jmoiron/sqlx"
 	"github.com/zett-8/go-clean-echo/models"
 )
 
-type BookS interface {
-}
-
 type BookStore struct {
-	*sqlx.DB
+	*sql.DB
 }
 
-func (s *BookStore) Get() ([]*models.Book, error) {
-	books := make([]*models.Book, 0)
+func (s *BookStore) Get() ([]models.Book, error) {
+	books := make([]models.Book, 0)
 
 	query := "SELECT id, name, author_id from books;"
 
-	err := s.Select(&books, query)
+	rows, err := s.Query(query)
 	if err != nil {
 		return nil, err
+	}
+
+	for rows.Next() {
+		var b models.Book
+		err = rows.Scan(&b.ID, &b.Name, &b.AuthorID)
+		books = append(books, b)
 	}
 
 	return books, nil
