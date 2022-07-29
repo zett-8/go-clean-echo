@@ -5,6 +5,7 @@ import (
 	"github.com/zett-8/go-clean-echo/services"
 )
 
-func NewBookHandler(e *echo.Echo, s *services.BookService) {
+func NewBookHandler(e *echo.Group, s *services.BookService) {
 	e.GET("/book", s.GetBooks)
+	e.DELETE("/book/:id", s.DeleteBook)
 }

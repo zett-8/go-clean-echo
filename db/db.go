@@ -10,7 +10,7 @@ import (
 
 var GO_ENV = os.Getenv("GO_ENV")
 
-func Load() (*sqlx.DB, error) {
+func New() (*sqlx.DB, error) {
 	var uri string
 	if GO_ENV == "development" {
 		uri = "postgres://postgres:postgres@echo-db:5432/postgres?sslmode=disable"

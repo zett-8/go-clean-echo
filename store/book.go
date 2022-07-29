@@ -1,9 +1,9 @@
 package store
 
 import (
+	"database/sql"
 	"github.com/jmoiron/sqlx"
 	"github.com/zett-8/go-clean-echo/models"
-	"log"
 )
 
 type BookStore struct {
@@ -23,9 +23,29 @@ func (s *BookStore) Get() ([]*models.Book, error) {
 
 	err := s.db.Select(&books, query)
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 
 	return books, nil
+}
+
+func (s *BookStore) DeleteById(id int) error {
+	query := `
+		DELETE FROM books
+		WHERE books.id = $1
+		RETURNING books.id;
+`
+
+	row, err := s.db.Exec(query, id)
+	if err != nil {
+		return err
+	}
+
+	if r, err := row.RowsAffected(); err != nil {
+		return err
+	} else if r == 0 {
+		return sql.ErrNoRows
+	}
+
+	return nil
 }

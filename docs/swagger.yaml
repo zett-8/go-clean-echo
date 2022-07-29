@@ -1,0 +1,130 @@
+basePath: /
+definitions:
+  models.Author:
+    properties:
+      country:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  models.Book:
+    properties:
+      author_id:
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  utils.Error:
+    properties:
+      errors:
+        properties:
+          message: {}
+        type: object
+    type: object
+host: localhost:8888
+info:
+  contact: {}
+  description: This is a sample server.
+  termsOfService: http://swagger.io/terms/
+  title: Go clean echo API v1
+  version: "1.0"
+paths:
+  /api/v1/author:
+    get:
+      consumes:
+      - '*/*'
+      description: Fetch a list of all authors.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Author'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.Error'
+      summary: Fetch a list of all authors.
+      tags:
+      - Author
+  /api/v1/author/{id}:
+    delete:
+      consumes:
+      - '*/*'
+      description: Delete an author by ID.
+      parameters:
+      - description: Author id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.Error'
+      summary: Delete an author by ID.
+      tags:
+      - Author
+  /api/v1/book:
+    get:
+      consumes:
+      - '*/*'
+      description: Fetch a list of all books.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Book'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.Error'
+      summary: Fetch a list of all books.
+      tags:
+      - Book
+  /api/v1/book/{id}:
+    delete:
+      consumes:
+      - '*/*'
+      description: Delete a book by ID.
+      parameters:
+      - description: Book id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Deleted Book ID
+          schema:
+            type: integer
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.Error'
+      summary: Delete a book by ID.
+      tags:
+      - Book
+schemes:
+- http
+swagger: "2.0"
