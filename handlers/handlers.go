@@ -6,26 +6,32 @@ import (
 	"github.com/labstack/gommon/log"
 	echoSwagger "github.com/swaggo/echo-swagger"
 	"github.com/zett-8/go-clean-echo/services"
-	"net/http"
 	"strings"
 )
 
-//type Handlers struct {
-//	AuthorHandler
-//	BookHandler
-//}
+type Handlers struct {
+	AuthorHandler
+	BookHandler
+}
 
-func New(e *echo.Echo, s *services.Services) {
-	g := e.Group("/api/v1")
+func New(s *services.Services) *Handlers {
+	return &Handlers{
+		AuthorHandler: AuthorHandler{&s.AuthorService},
+		BookHandler:   BookHandler{&s.BookService},
+	}
+}
 
-	NewAuthorHandler(g, &s.AuthorService)
-	NewBookHandler(g, &s.BookService)
-
+func Set(e *echo.Echo, h *Handlers) {
+	e.GET("/", IndexHandler)
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello World")
-	})
+	g := e.Group("/api/v1")
+	// Author
+	g.GET("/author", h.AuthorHandler.GetAuthors)
+	g.DELETE("/author/:id", h.AuthorHandler.DeleteAuthor)
+	// Book
+	g.GET("/book", h.BookHandler.GetBooks)
+	g.DELETE("/book/:id", h.BookHandler.DeleteBook)
 }
 
 func Echo() *echo.Echo {

@@ -35,7 +35,9 @@ func main() {
 
 	s := stores.New(db)
 	ss := services.New(s)
-	handlers.New(e, ss)
+	h := handlers.New(ss)
+
+	handlers.Set(e, h)
 
 	PORT := os.Getenv("PORT")
 	if PORT == "" {
