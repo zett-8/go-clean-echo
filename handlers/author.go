@@ -48,7 +48,8 @@ func (h *AuthorHandler) GetAuthors(c echo.Context) error {
 func (h *AuthorHandler) DeleteAuthor(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, "ID is invalid")
+		log.Println(err)
+		return c.JSON(http.StatusBadRequest, "ID is invaliddddd")
 	}
 
 	err = h.AuthorService.DeleteAuthor(id)
