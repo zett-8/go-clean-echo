@@ -65,11 +65,16 @@ func New(development bool) (*sqlx.DB, error) {
 }
 
 func Mock() (*sqlx.DB, sqlmock.Sqlmock) {
-	db, mock, err := sqlmock.New()
+	_db, mock, err := sqlmock.New()
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return sqlx.NewDb(db, "sqlmock"), mock
+	db := sqlx.NewDb(_db, "pgx")
+
+	_ = goose.SetDialect("postgres")
+	_ = goose.Up(db.DB, "db/migrations")
+
+	return db, mock
 }
