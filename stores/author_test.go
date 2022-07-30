@@ -37,25 +37,53 @@ func TestAuthorStore_GetSuccessCase(t *testing.T) {
 }
 
 func TestAuthorStore_CreateSuccessCase(t *testing.T) {
-	//mockDB, mock := db.Mock()
-	//defer mockDB.Close()
-	//
-	//a := &models.Author{
-	//	ID:      1,
-	//	Name:    "test",
-	//	Country: "US",
-	//}
-	//
-	//mock.NewRows([]string{"id", "name", "country"})
-	//pr := mock.ExpectPrepare("INSERT INTO authors (name, country) VALUES ($1, $2) RETURNING id")
-	//pr.ExpectQuery().WithArgs(a.Name, a.Country).WillReturnRows(sqlmock.NewRows([]string{"1"}))
-	//s := New(mockDB)
-	//
-	//r, err := s.Create(a)
-	//
-	//assert.NoError(t, err)
-	//assert.Equal(t, int64(1), r)
-	//assert.NoError(t, mock.ExpectationsWereMet())
+	mockDB, mock := db.Mock()
+	defer mockDB.Close()
+
+	a := &models.Author{
+		ID:      1,
+		Name:    "test",
+		Country: "US",
+	}
+
+	mock.NewRows([]string{"id", "name", "country"})
+	pr := mock.ExpectPrepare("INSERT INTO authors (name, country) VALUES ($1, $2) RETURNING id")
+	pr.ExpectQuery().WithArgs(a.Name, a.Country).WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+
+	s := New(mockDB)
+
+	r, err := s.Create(a)
+
+	assert.NoError(t, err)
+	assert.Equal(t, int64(1), r)
+	assert.NoError(t, mock.ExpectationsWereMet())
+}
+
+func TestAuthorStore_UpdateByIdSuccessCase(t *testing.T) {
+	mockDB, mock := db.Mock()
+	defer mockDB.Close()
+
+	a := &models.Author{
+		ID:      1,
+		Name:    "test",
+		Country: "US",
+	}
+
+	mock.NewRows([]string{"id", "name", "country"}).AddRow(a.ID, a.Name, a.Country)
+
+	a.Name = "new name"
+	a.Country = "new country"
+
+	pr := mock.ExpectPrepare("UPDATE authors SET name = $1, country = $2 WHERE authors.id = $3 RETURNING id")
+	pr.ExpectQuery().WithArgs(a.Name, a.Country, a.ID).WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(a.ID))
+
+	s := New(mockDB)
+
+	r, err := s.UpdateById(a)
+
+	assert.NoError(t, err)
+	assert.Equal(t, int64(a.ID), r)
+	assert.NoError(t, mock.ExpectationsWereMet())
 }
 
 func TestAuthorStore_DeleteByIdSuccessCase(t *testing.T) {
