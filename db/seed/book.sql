@@ -5,3 +5,4 @@ VALUES
     (3, 'Never let me go', 1),
     (4, '1Q84', 2)
 ON CONFLICT do nothing;
+SELECT setval('books_id_seq', 3, true);

@@ -47,6 +47,39 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "description": "Create an author.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Author"
+                ],
+                "summary": "Create an author.",
+                "responses": {
+                    "200": {
+                        "description": "Created ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
             }
         },
         "/api/v1/author/{id}": {
@@ -214,12 +247,7 @@ const docTemplate = `{
         "utils.Error": {
             "type": "object",
             "properties": {
-                "errors": {
-                    "type": "object",
-                    "properties": {
-                        "message": {}
-                    }
-                }
+                "message": {}
             }
         }
     }

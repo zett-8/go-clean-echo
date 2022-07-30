@@ -20,10 +20,7 @@ definitions:
     type: object
   utils.Error:
     properties:
-      errors:
-        properties:
-          message: {}
-        type: object
+      message: {}
     type: object
 host: localhost:8888
 info:
@@ -52,6 +49,28 @@ paths:
           schema:
             $ref: '#/definitions/utils.Error'
       summary: Fetch a list of all authors.
+      tags:
+      - Author
+    post:
+      consumes:
+      - '*/*'
+      description: Create an author.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Created ID
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.Error'
+      summary: Create an author.
       tags:
       - Author
   /api/v1/author/{id}:

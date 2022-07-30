@@ -28,6 +28,7 @@ func Set(e *echo.Echo, h *Handlers) {
 	g := e.Group("/api/v1")
 	// Author
 	g.GET("/author", h.AuthorHandler.GetAuthors)
+	g.POST("/author", h.AuthorHandler.CreateAuthor)
 	g.DELETE("/author/:id", h.AuthorHandler.DeleteAuthorById)
 	// Book
 	g.GET("/book", h.BookHandler.GetBooks)
