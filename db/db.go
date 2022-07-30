@@ -66,7 +66,7 @@ func New(development bool) (*sql.DB, error) {
 }
 
 func Mock() (*sql.DB, sqlmock.Sqlmock) {
-	db, mock, err := sqlmock.New()
+	db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
 
 	if err != nil {
 		log.Fatal(err)

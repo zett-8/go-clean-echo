@@ -17,7 +17,7 @@ type BookStoreContext struct {
 func (s *BookStoreContext) Get() ([]models.Book, error) {
 	books := make([]models.Book, 0)
 
-	query := "SELECT id, name, author_id from books;"
+	query := "SELECT id, name, author_id from books"
 
 	rows, err := s.Query(query)
 	if err != nil {
@@ -34,11 +34,7 @@ func (s *BookStoreContext) Get() ([]models.Book, error) {
 }
 
 func (s *BookStoreContext) DeleteById(id int) error {
-	query := `
-		DELETE FROM books
-		WHERE books.id = $1
-		RETURNING books.id;
-`
+	query := "DELETE FROM books WHERE books.id = $1 RETURNING books.id"
 
 	row, err := s.Exec(query, id)
 	if err != nil {

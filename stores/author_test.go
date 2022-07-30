@@ -36,6 +36,28 @@ func TestAuthorStore_GetSuccessCase(t *testing.T) {
 	assert.NoError(t, mock.ExpectationsWereMet())
 }
 
+func TestAuthorStore_CreateSuccessCase(t *testing.T) {
+	//mockDB, mock := db.Mock()
+	//defer mockDB.Close()
+	//
+	//a := &models.Author{
+	//	ID:      1,
+	//	Name:    "test",
+	//	Country: "US",
+	//}
+	//
+	//mock.NewRows([]string{"id", "name", "country"})
+	//pr := mock.ExpectPrepare("INSERT INTO authors (name, country) VALUES ($1, $2) RETURNING id")
+	//pr.ExpectQuery().WithArgs(a.Name, a.Country).WillReturnRows(sqlmock.NewRows([]string{"1"}))
+	//s := New(mockDB)
+	//
+	//r, err := s.Create(a)
+	//
+	//assert.NoError(t, err)
+	//assert.Equal(t, int64(1), r)
+	//assert.NoError(t, mock.ExpectationsWereMet())
+}
+
 func TestAuthorStore_DeleteByIdSuccessCase(t *testing.T) {
 	mockDB, mock := db.Mock()
 	defer mockDB.Close()
@@ -52,11 +74,11 @@ func TestAuthorStore_DeleteByIdSuccessCase(t *testing.T) {
 		rows.AddRow(a.ID, a.Name, a.Country)
 	}
 	mock.
-		ExpectExec("DELETE FROM authors WHERE authors.id = \\$1 RETURNING authors.id").
+		ExpectExec("DELETE FROM authors WHERE authors.id = $1 RETURNING authors.id").
 		WithArgs(deletingID).
 		WillReturnResult(sqlmock.NewResult(int64(deletingID), 1))
 	mock.
-		ExpectExec("DELETE FROM authors WHERE authors.id = \\$1 RETURNING authors.id").
+		ExpectExec("DELETE FROM authors WHERE authors.id = $1 RETURNING authors.id").
 		WithArgs(deletingID).
 		WillReturnResult(sqlmock.NewResult(int64(deletingID), 0))
 

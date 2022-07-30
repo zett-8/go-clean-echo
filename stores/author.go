@@ -3,6 +3,7 @@ package stores
 import (
 	"database/sql"
 	"github.com/zett-8/go-clean-echo/models"
+	"log"
 )
 
 type AuthorStore interface {
@@ -35,15 +36,15 @@ func (s *AuthorStoreContext) Get() ([]models.Author, error) {
 }
 
 func (s *AuthorStoreContext) Create(author *models.Author) (int64, error) {
-	query, err := s.Prepare("INSERT INTO authors (name, country) VALUES ($1, $2) RETURNING id;")
+	query, err := s.Prepare("INSERT INTO authors (name, country) VALUES ($1, $2) RETURNING id")
 	if err != nil {
 		return 0, err
 	}
 
 	var id int64
 
-	err = query.QueryRow(author.Name, author.Country).Scan(&id)
-	if err != nil {
+	if err = query.QueryRow(author.Name, author.Country).Scan(&id); err != nil {
+		log.Println(err)
 		return 0, err
 	}
 
@@ -51,7 +52,7 @@ func (s *AuthorStoreContext) Create(author *models.Author) (int64, error) {
 }
 
 func (s *AuthorStoreContext) UpdateById(author *models.Author) (int64, error) {
-	query, err := s.Prepare("UPDATE authors SET name = $1, country = $2 WHERE authors.id = $3 RETURNING id;")
+	query, err := s.Prepare("UPDATE authors SET name = $1, country = $2 WHERE authors.id = $3 RETURNING id")
 	if err != nil {
 		return 0, err
 	}

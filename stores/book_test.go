@@ -52,11 +52,11 @@ func TestBookStore_DeleteByIdSuccessCase(t *testing.T) {
 		rows.AddRow(b.ID, b.Name, b.AuthorID)
 	}
 	mock.
-		ExpectExec("DELETE FROM books WHERE books.id = \\$1 RETURNING books.id").
+		ExpectExec("DELETE FROM books WHERE books.id = $1 RETURNING books.id").
 		WithArgs(deletingID).
 		WillReturnResult(sqlmock.NewResult(int64(deletingID), 1))
 	mock.
-		ExpectExec("DELETE FROM books WHERE books.id = \\$1 RETURNING books.id").
+		ExpectExec("DELETE FROM books WHERE books.id = $1 RETURNING books.id").
 		WithArgs(deletingID).
 		WillReturnResult(sqlmock.NewResult(int64(deletingID), 0))
 
