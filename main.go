@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	_ "github.com/jackc/pgx/v4/stdlib"
 	database "github.com/zett-8/go-clean-echo/db"
 	_ "github.com/zett-8/go-clean-echo/docs"
 	"github.com/zett-8/go-clean-echo/handlers"

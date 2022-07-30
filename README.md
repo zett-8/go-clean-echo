@@ -10,6 +10,14 @@ This makes it super easy to replace each layer. (also good for testing)
 
 ![clean architecture](./utils/img.png)
 
+#### What you can see in this repo
+- [x] echo (Framework)
+- [x] Clean architecture
+- [x] swagger for documentation
+- [x] sql-mock for testing
+- [x] goose for migration
+- [x] Multi-stage build for optimized docker image
+
 ## 👟 How to run
 Install.
 ```shell
