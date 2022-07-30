@@ -1,6 +1,6 @@
 # Go Echo Simple API with Clean Architecture
 
-## About this repo
+## 🤓 About this repo
 This is a sample of Web API built by Go (Echo) according to *Clean architecture*.  
 But I have to say that I'm not a backend specialist nor of Go, so Clean architecture here could be wrong or missing essential concepts. (I'm sorry in that case)
 
@@ -10,7 +10,7 @@ This makes it super easy to replace each layer. (also good for testing)
 
 ![clean architecture](./utils/img.png)
 
-## How to run
+## 👟 How to run
 Install.
 ```shell
 git clone git@github.com:zett-8/go-clean-echo.git
@@ -28,7 +28,7 @@ Run docker.
 docker-compose up
 ```
 
-## Tips 
+## 🌱 Tips 
 
 ### Use multi-stage build
 Using multistage build reduces the size of the docker image.
@@ -157,12 +157,12 @@ func TestGetAuthorsSuccessCase(t *testing.T) {
 }
 ```
 
-## API Document (Swagger)
+## 📃 API Document (Swagger)
 ```text
 http://localhost:8888/swagger/index.html
 ```
 
-## References
+## 💜 References
 [bxcodec/go-clean-arch](https://github.com/bxcodec/go-clean-arch)  
 [onakrainikoff/echo-rest-api](https://github.com/onakrainikoff/echo-rest-api)  
 [xesina/golang-echo-realworld-example-app](https://github.com/xesina/golang-echo-realworld-example-app)  
