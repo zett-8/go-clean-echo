@@ -17,6 +17,7 @@ This makes it super easy to replace each layer. (also good for testing)
 - [x] sqlmock ([DATA-DOG/go-sqlmock](https://github.com/DATA-DOG/go-sqlmock)) for testing
 - [x] goose([pressly/goose](https://github.com/pressly/goose)) for migration
 - [x] Multi-stage build for optimized docker image
+- [x] Hot reload([cosmtrek/air](https://github.com/cosmtrek/air)) for efficient development
 
 ## 👟 How to run
 Install.
