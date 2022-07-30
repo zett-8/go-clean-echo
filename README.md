@@ -1,10 +1,38 @@
 # Go Echo Simple API with Clean Architecture
 
 ## About this repo
+This is a sample of Web API built by Go (Echo) according to *Clean architecture*.  
+But I have to say that I'm not a backend specialist nor of Go, so Clean architecture here could be wrong or missing essential concepts. (I'm sorry in that case)
+
+This sample consists of 4 layers, "Models", "Stores", "Services(Logic)" and "Handlers(Framework)", although naming might differ in another sample.
+Each layer only concerns/handles its inside layer, not the other way around.
+This makes it super easy to replace each layer. (also good for testing)
+
+![clean architecture](./utils/img.png)
+
+## How to run
+Install.
+```shell
+git clone git@github.com:zett-8/go-clean-echo.git
+
+cd go-clean-echo
+```
+
+Download dependencies.
+```shell
+go mod download
+```
+
+Run docker.
+```shell
+docker-compose up
+```
 
 ## Tips 
-### Use multistage build
+
+### Use multi-stage build
 Using multistage build reduces the size of the docker image.
+
 ```dockerfile
 # Base image for local development. Use 'air' for hot reload.
 FROM golang:1.18-alpine as base
@@ -57,7 +85,7 @@ But it seems no longer be developed or maintained, so I recommend to use "air"
 ### Mock a unit for testing
 Here is one example to mock "service" for "handler" test.
 
-This the service to mock.
+Let's say this is the service to mock.
 ```go
 // services/services.go
 type Services struct {
@@ -111,7 +139,7 @@ func (m *MockAuthorService) DeleteAuthor(id int) error {
 }
 ```
 
-Then use as mockService.
+Then use it as mockService.
 ```go
 // handlers/author_test.go
 func TestGetAuthorsSuccessCase(t *testing.T) {
@@ -129,7 +157,7 @@ func TestGetAuthorsSuccessCase(t *testing.T) {
 }
 ```
 
-## API Document
+## API Document (Swagger)
 ```text
 http://localhost:8888/swagger/index.html
 ```
