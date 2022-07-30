@@ -28,13 +28,7 @@ func (s *AuthorStore) Get() ([]models.Author, error) {
 }
 
 func (s *AuthorStore) DeleteById(id int) error {
-	query := `
-		DELETE FROM authors
-		WHERE authors.id = $1
-		RETURNING authors.id;
-`
-
-	row, err := s.Exec(query, id)
+	row, err := s.Exec("DELETE FROM authors WHERE authors.id = $1 RETURNING authors.id", id)
 	if err != nil {
 		return err
 	}

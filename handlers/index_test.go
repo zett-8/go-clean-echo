@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -14,17 +15,8 @@ func TestIndexHandler(t *testing.T) {
 
 	c := e.NewContext(req, rec)
 
-	err := IndexHandler(c)
-
-	if err != nil {
-		t.Error("Failed to access /", err)
-	}
-
-	if rec.Code != http.StatusOK {
-		t.Error("Status is not 200 but", rec.Code)
-	}
-
-	if rec.Body.String() != "Hello World" {
-		t.Errorf("Expected %s but Got %s", "Hello World", rec.Body.String())
+	if assert.NoError(t, IndexHandler(c)) {
+		assert.Equal(t, rec.Code, http.StatusOK)
+		assert.Equal(t, rec.Body.String(), "Hello World")
 	}
 }

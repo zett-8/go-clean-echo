@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/DATA-DOG/go-sqlmock"
+	_ "github.com/lib/pq"
 	"github.com/pressly/goose/v3"
 	"io/ioutil"
 	"log"
@@ -17,7 +18,7 @@ func New(development bool) (*sql.DB, error) {
 		uri = "postgres://postgres:postgres@echo-db:5432/postgres?sslmode=disable"
 	}
 
-	db, err := sql.Open("pgx", uri)
+	db, err := sql.Open("postgres", uri)
 	if err != nil {
 		return nil, err
 	}
@@ -45,9 +46,9 @@ func New(development bool) (*sql.DB, error) {
 				fmt.Println(err)
 			}
 
-			sql := string(c)
+			sqlCode := string(c)
 
-			_, err = db.Exec(sql)
+			_, err = db.Exec(sqlCode)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -66,13 +67,10 @@ func New(development bool) (*sql.DB, error) {
 
 func Mock() (*sql.DB, sqlmock.Sqlmock) {
 	db, mock, err := sqlmock.New()
-	//db := sql.Open("sqlmock", sqlmock.dsn)
+
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	_ = goose.SetDialect("sqlmock")
-	_ = goose.Up(db, "db/migrations")
 
 	return db, mock
 }
