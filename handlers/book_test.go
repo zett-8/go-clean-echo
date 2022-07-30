@@ -1,42 +1,42 @@
 package handlers
 
 import (
-	"encoding/json"
+	"database/sql"
+	"errors"
 	"github.com/stretchr/testify/assert"
-	"github.com/zett-8/go-clean-echo/db"
 	"github.com/zett-8/go-clean-echo/models"
 	"github.com/zett-8/go-clean-echo/services"
-	"github.com/zett-8/go-clean-echo/stores"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 )
 
+type MockBookService struct {
+	services.BookService
+	MockGetBooks       func() ([]models.Book, error)
+	MockDeleteBookById func(id int) error
+}
+
+func (m *MockBookService) GetBooks() ([]models.Book, error) {
+	return m.MockGetBooks()
+}
+
+func (m *MockBookService) DeleteBookById(id int) error {
+	return m.MockDeleteBookById(id)
+}
+
 func TestGetBooksSuccessCase(t *testing.T) {
-	mockDB, sqlmock := db.Mock()
-	defer mockDB.Close()
-
-	books := []models.Book{
-		{ID: 1, Name: "test1", AuthorID: 1},
-		{ID: 2, Name: "test2", AuthorID: 1},
+	s := &MockBookService{
+		MockGetBooks: func() ([]models.Book, error) {
+			var r []models.Book
+			return r, nil
+		},
 	}
 
-	rows := sqlmock.NewRows([]string{"id", "name", "author_id"})
-	for _, b := range books {
-		rows.AddRow(b.ID, b.Name, b.AuthorID)
-	}
-	sqlmock.MatchExpectationsInOrder(false)
-	sqlmock.ExpectBegin()
-	sqlmock.
-		ExpectQuery("SELECT id, name, author_id from books;").
-		WillReturnRows(rows)
-	sqlmock.ExpectCommit()
+	mockService := &services.Services{BookService: s}
 
 	e := Echo()
-	s := stores.New(mockDB)
-	ss := services.New(s)
-	h := New(ss)
+	h := New(mockService)
 
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/book", nil)
 	rec := httptest.NewRecorder()
@@ -44,10 +44,115 @@ func TestGetBooksSuccessCase(t *testing.T) {
 
 	assert.NoError(t, h.BookHandler.GetBooks(c))
 	assert.Equal(t, rec.Code, http.StatusOK)
+}
 
-	_expected, _ := json.Marshal(books)
-	expected := string(_expected)
-	got := strings.TrimSuffix(rec.Body.String(), "\n")
+func TestGetBooks500Case(t *testing.T) {
+	s := &MockBookService{
+		MockGetBooks: func() ([]models.Book, error) {
+			var r []models.Book
+			return r, errors.New("fake error")
+		},
+	}
 
-	assert.Equal(t, expected, got)
+	mockService := &services.Services{BookService: s}
+
+	e := Echo()
+	h := New(mockService)
+
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/book", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	assert.NoError(t, h.BookHandler.GetBooks(c))
+	assert.Equal(t, http.StatusInternalServerError, rec.Code)
+}
+
+func TestDeleteBookSuccessCase(t *testing.T) {
+	s := &MockBookService{
+		MockDeleteBookById: func(id int) error {
+			return nil
+		},
+	}
+
+	mockService := &services.Services{BookService: s}
+
+	e := Echo()
+	h := New(mockService)
+
+	req := httptest.NewRequest(http.MethodDelete, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("api/v1/book/:id")
+	c.SetParamNames("id")
+	c.SetParamValues("1")
+
+	assert.NoError(t, h.BookHandler.DeleteBook(c))
+	assert.Equal(t, http.StatusOK, rec.Code)
+}
+
+func TestDeleteBook400Case(t *testing.T) {
+	s := &MockBookService{
+		MockDeleteBookById: func(id int) error {
+			return nil
+		},
+	}
+
+	mockService := &services.Services{BookService: s}
+
+	e := Echo()
+	h := New(mockService)
+
+	req := httptest.NewRequest(http.MethodDelete, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("api/v1/Book/:id")
+
+	assert.NoError(t, h.BookHandler.DeleteBook(c))
+	assert.Equal(t, http.StatusBadRequest, rec.Code)
+}
+
+func TestDeleteBook404Case(t *testing.T) {
+	s := &MockBookService{
+		MockDeleteBookById: func(id int) error {
+			return sql.ErrNoRows
+		},
+	}
+
+	mockService := &services.Services{BookService: s}
+
+	e := Echo()
+	h := New(mockService)
+
+	req := httptest.NewRequest(http.MethodDelete, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("api/v1/Book/:id")
+	c.SetParamNames("id")
+	c.SetParamValues("4242872")
+
+	assert.NoError(t, h.BookHandler.DeleteBook(c))
+	assert.Equal(t, http.StatusNotFound, rec.Code)
+}
+
+func TestDeleteBook500Case(t *testing.T) {
+	s := &MockBookService{
+		MockDeleteBookById: func(id int) error {
+			return errors.New("fake error")
+		},
+	}
+
+	mockService := &services.Services{BookService: s}
+
+	e := Echo()
+	h := New(mockService)
+
+	req := httptest.NewRequest(http.MethodDelete, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("api/v1/book/:id")
+	c.SetParamNames("id")
+	c.SetParamValues("1")
+
+	assert.NoError(t, h.BookHandler.DeleteBook(c))
+	assert.Equal(t, http.StatusInternalServerError, rec.Code)
 }

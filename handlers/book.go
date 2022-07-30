@@ -10,7 +10,7 @@ import (
 )
 
 type BookHandler struct {
-	*services.BookService
+	services.BookService
 }
 
 // GetBooks

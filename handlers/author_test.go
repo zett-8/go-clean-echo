@@ -1,83 +1,158 @@
 package handlers
 
 import (
+	"database/sql"
+	"errors"
+	"github.com/stretchr/testify/assert"
 	"github.com/zett-8/go-clean-echo/models"
 	"github.com/zett-8/go-clean-echo/services"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 )
 
 type MockAuthorService struct {
 	services.AuthorService
-	MockGetAuthors   func() ([]models.Author, error)
-	MockDeleteAuthor func() error
+	MockGetAuthors       func() ([]models.Author, error)
+	MockDeleteAuthorById func(id int) error
 }
 
 func (m *MockAuthorService) GetAuthors() ([]models.Author, error) {
 	return m.MockGetAuthors()
 }
 
-func (m *MockAuthorService) DeleteAuthor() error {
-	return m.MockDeleteAuthor()
+func (m *MockAuthorService) DeleteAuthor(id int) error {
+	return m.MockDeleteAuthorById(id)
 }
 
 func TestGetAuthorsSuccessCase(t *testing.T) {
+	s := &MockAuthorService{
+		MockGetAuthors: func() ([]models.Author, error) {
+			var r []models.Author
+			return r, nil
+		},
+	}
 
-	//mockService := &services.Services{AuthorService: MockAuthorService}
-	//e := Echo()
-	//h := New(mockService)
-	//
-	//req := httptest.NewRequest(http.MethodGet, "/api/v1/author", nil)
-	//rec := httptest.NewRecorder()
-	//c := e.NewContext(req, rec)
-	//
-	//assert.NoError(t, h.AuthorHandler.GetAuthors(c))
-	//assert.Equal(t, rec.Code, http.StatusOK)
+	mockService := &services.Services{AuthorService: s}
+
+	e := Echo()
+	h := New(mockService)
+
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/author", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	assert.NoError(t, h.AuthorHandler.GetAuthors(c))
+	assert.Equal(t, rec.Code, http.StatusOK)
+}
+
+func TestGetAuthors500Case(t *testing.T) {
+	s := &MockAuthorService{
+		MockGetAuthors: func() ([]models.Author, error) {
+			var r []models.Author
+			return r, errors.New("fake error")
+		},
+	}
+
+	mockService := &services.Services{AuthorService: s}
+
+	e := Echo()
+	h := New(mockService)
+
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/author", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	assert.NoError(t, h.AuthorHandler.GetAuthors(c))
+	assert.Equal(t, http.StatusInternalServerError, rec.Code)
 }
 
 func TestDeleteAuthorSuccessCase(t *testing.T) {
-	//mockDB, mock := db.Mock()
-	//defer mockDB.Close()
-	//
-	//authors := []models.Author{
-	//	{ID: 1, Name: "test1", Country: "US"},
-	//	{ID: 2, Name: "test2", Country: "UK"},
-	//}
-	//
-	//deletingID := authors[0].ID
-	//
-	//rows := mock.NewRows([]string{"id", "name", "country"})
-	//for _, a := range authors {
-	//	rows.AddRow(a.ID, a.Name, a.Country)
-	//}
-	//mock.MatchExpectationsInOrder(false)
-	//mock.ExpectBegin()
-	//mock.ExpectExec(`
-	//	DELETE FROM authors
-	//	WHERE authors.id = $1
-	//	RETURNING authors.id;
-	//`).
-	//	WithArgs(deletingID).
-	//	WillReturnResult(sqlmock.NewResult(1, 1))
-	//mock.ExpectCommit()
-	//
-	//e := Echo()
-	//s := stores.New(mockDB)
-	//ss := services.New(s)
-	//h := New(ss)
-	//
-	//req := httptest.NewRequest(http.MethodDelete, "/", nil)
-	//rec := httptest.NewRecorder()
-	//c := e.NewContext(req, rec)
-	//c.SetPath("/api/v1/author/:id")
-	//c.SetParamNames("id")
-	//c.SetParamValues(fmt.Sprint(deletingID))
-	//
-	//assert.NoError(t, h.AuthorHandler.DeleteAuthor(c))
-	//assert.Equal(t, rec.Code, http.StatusOK)
-	//
-	//_expected, _ := json.Marshal(authors)
-	//expected := string(_expected)
-	//got := strings.TrimSuffix(rec.Body.String(), "\n")
-	//
-	//assert.Equal(t, expected, got)
+	s := &MockAuthorService{
+		MockDeleteAuthorById: func(id int) error {
+			return nil
+		},
+	}
+
+	mockService := &services.Services{AuthorService: s}
+
+	e := Echo()
+	h := New(mockService)
+
+	req := httptest.NewRequest(http.MethodDelete, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("api/v1/author/:id")
+	c.SetParamNames("id")
+	c.SetParamValues("1")
+
+	assert.NoError(t, h.AuthorHandler.DeleteAuthorById(c))
+	assert.Equal(t, http.StatusOK, rec.Code)
+}
+
+func TestDeleteAuthor400Case(t *testing.T) {
+	s := &MockAuthorService{
+		MockDeleteAuthorById: func(id int) error {
+			return nil
+		},
+	}
+
+	mockService := &services.Services{AuthorService: s}
+
+	e := Echo()
+	h := New(mockService)
+
+	req := httptest.NewRequest(http.MethodDelete, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("api/v1/author/:id")
+
+	assert.NoError(t, h.AuthorHandler.DeleteAuthorById(c))
+	assert.Equal(t, http.StatusBadRequest, rec.Code)
+}
+
+func TestDeleteAuthor404Case(t *testing.T) {
+	s := &MockAuthorService{
+		MockDeleteAuthorById: func(id int) error {
+			return sql.ErrNoRows
+		},
+	}
+
+	mockService := &services.Services{AuthorService: s}
+
+	e := Echo()
+	h := New(mockService)
+
+	req := httptest.NewRequest(http.MethodDelete, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("api/v1/author/:id")
+	c.SetParamNames("id")
+	c.SetParamValues("4242872")
+
+	assert.NoError(t, h.AuthorHandler.DeleteAuthorById(c))
+	assert.Equal(t, http.StatusNotFound, rec.Code)
+}
+
+func TestDeleteAuthor500Case(t *testing.T) {
+	s := &MockAuthorService{
+		MockDeleteAuthorById: func(id int) error {
+			return errors.New("fake error")
+		},
+	}
+
+	mockService := &services.Services{AuthorService: s}
+
+	e := Echo()
+	h := New(mockService)
+
+	req := httptest.NewRequest(http.MethodDelete, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("api/v1/author/:id")
+	c.SetParamNames("id")
+	c.SetParamValues("1")
+
+	assert.NoError(t, h.AuthorHandler.DeleteAuthorById(c))
+	assert.Equal(t, http.StatusInternalServerError, rec.Code)
 }

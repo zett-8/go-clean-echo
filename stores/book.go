@@ -5,11 +5,16 @@ import (
 	"github.com/zett-8/go-clean-echo/models"
 )
 
-type BookStore struct {
+type BookStore interface {
+	Get() ([]models.Book, error)
+	DeleteById(id int) error
+}
+
+type BookStoreContext struct {
 	*sql.DB
 }
 
-func (s *BookStore) Get() ([]models.Book, error) {
+func (s *BookStoreContext) Get() ([]models.Book, error) {
 	books := make([]models.Book, 0)
 
 	query := "SELECT id, name, author_id from books;"
@@ -28,7 +33,7 @@ func (s *BookStore) Get() ([]models.Book, error) {
 	return books, nil
 }
 
-func (s *BookStore) DeleteById(id int) error {
+func (s *BookStoreContext) DeleteById(id int) error {
 	query := `
 		DELETE FROM books
 		WHERE books.id = $1

@@ -16,8 +16,8 @@ type Handlers struct {
 
 func New(s *services.Services) *Handlers {
 	return &Handlers{
-		AuthorHandler: AuthorHandler{&s.AuthorService},
-		BookHandler:   BookHandler{&s.BookService},
+		AuthorHandler: AuthorHandler{s.AuthorService},
+		BookHandler:   BookHandler{s.BookService},
 	}
 }
 
@@ -28,7 +28,7 @@ func Set(e *echo.Echo, h *Handlers) {
 	g := e.Group("/api/v1")
 	// Author
 	g.GET("/author", h.AuthorHandler.GetAuthors)
-	g.DELETE("/author/:id", h.AuthorHandler.DeleteAuthor)
+	g.DELETE("/author/:id", h.AuthorHandler.DeleteAuthorById)
 	// Book
 	g.GET("/book", h.BookHandler.GetBooks)
 	g.DELETE("/book/:id", h.BookHandler.DeleteBook)

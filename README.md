@@ -1,9 +1,139 @@
 # Go Echo Simple API with Clean Architecture
 
+## About this repo
+
+## Tips 
+### Use multistage build
+Using multistage build reduces the size of the docker image.
+```dockerfile
+# Base image for local development. Use 'air' for hot reload.
+FROM golang:1.18-alpine as base
+
+ENV PORT=8888
+ENV GO_ENV=development
+
+WORKDIR /app/go/base
+
+COPY go.mod .
+COPY go.sum .
+
+RUN go mod download
+RUN go install github.com/cosmtrek/air@latest
+
+COPY . .
+
+
+# The image for build. Set CGO_ENABLE=0 not to build unnecessary binary.
+FROM golang:1.18-alpine as builder
+
+ENV PORT=8888
+
+WORKDIR /app/go/builder
+
+COPY --from=base /app/go/base /app/go/builder
+
+RUN CGO_ENABLED=0 go build main.go
+
+
+# The final image to run 
+FROM alpine as production
+
+WORKDIR /app/go/src
+
+RUN apk add --no-cache ca-certificates
+COPY --from=builder /app/go/builder/main /app/go/src/main
+
+EXPOSE 8888
+
+CMD ["/app/go/src/main"]
+```
+
+### Use "Air" for hot reload
+We used to have other reloaders such as [realize](https://github.com/oxequa/realize).
+But it seems no longer be developed or maintained, so I recommend to use "air"
+
+> [cosmtrek/air](https://github.com/cosmtrek/air).
+
+### Mock a unit for testing
+Here is one example to mock "service" for "handler" test.
+
+This the service to mock.
+```go
+// services/services.go
+type Services struct {
+    AuthorService
+    BookService
+}
+
+func New(s *stores.Stores) *Services {
+    return &Services{
+        AuthorService: &AuthorServiceContext{s.AuthorStore},
+        BookService:   &BookServiceContext{s.BookStore},
+    }
+}
+
+// services/author.go
+type AuthorService interface {
+	GetAuthors() ([]models.Author, error)
+	DeleteAuthor(id int) error
+}
+
+type AuthorServiceContext struct {
+	store stores.AuthorStore
+}
+
+func (s *AuthorServiceContext) GetAuthors() ([]models.Author, error) {
+	r, err := s.store.Get()
+	return r, err
+}
+
+func (s *AuthorServiceContext) DeleteAuthor(id int) error {
+	err := s.store.DeleteById(id)
+	return err
+}
+```
+
+And in /handlers/author_test.go. Declare Mock struct.
+```go
+// handlers/author_test.go
+type MockAuthorService struct {
+	services.AuthorService
+	MockGetAuthors       func() ([]models.Author, error)
+	MockDeleteAuthorById func(id int) error
+}
+
+func (m *MockAuthorService) GetAuthors() ([]models.Author, error) {
+	return m.MockGetAuthors()
+}
+
+func (m *MockAuthorService) DeleteAuthor(id int) error {
+	return m.MockDeleteAuthorById(id)
+}
+```
+
+Then use as mockService.
+```go
+// handlers/author_test.go
+func TestGetAuthorsSuccessCase(t *testing.T) {
+    s := &MockAuthorService{
+        MockGetAuthors: func () ([]models.Author, error) {
+            var r []models.Author
+            return r, nil
+        },
+    }
+    
+    mockService := &services.Services{AuthorService: s}
+    
+    e := Echo()
+    h := New(mockService)
+}
+```
+
 ## API Document
 ```text
-localhost:8888/swagger/index.html
+http://localhost:8888/swagger/index.html
 ```
+
 ## References
 [bxcodec/go-clean-arch](https://github.com/bxcodec/go-clean-arch)  
 [onakrainikoff/echo-rest-api](https://github.com/onakrainikoff/echo-rest-api)  

@@ -5,11 +5,16 @@ import (
 	"github.com/zett-8/go-clean-echo/models"
 )
 
-type AuthorStore struct {
+type AuthorStore interface {
+	Get() ([]models.Author, error)
+	DeleteById(id int) error
+}
+
+type AuthorStoreContext struct {
 	*sql.DB
 }
 
-func (s *AuthorStore) Get() ([]models.Author, error) {
+func (s *AuthorStoreContext) Get() ([]models.Author, error) {
 	authors := make([]models.Author, 0)
 
 	rows, err := s.Query("SELECT id, name, country from authors")
@@ -27,7 +32,7 @@ func (s *AuthorStore) Get() ([]models.Author, error) {
 	return authors, nil
 }
 
-func (s *AuthorStore) DeleteById(id int) error {
+func (s *AuthorStoreContext) DeleteById(id int) error {
 	row, err := s.Exec("DELETE FROM authors WHERE authors.id = $1 RETURNING authors.id", id)
 	if err != nil {
 		return err

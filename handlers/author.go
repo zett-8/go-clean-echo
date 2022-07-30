@@ -10,7 +10,7 @@ import (
 )
 
 type AuthorHandler struct {
-	*services.AuthorService
+	services.AuthorService
 }
 
 // GetAuthors
@@ -33,7 +33,7 @@ func (h *AuthorHandler) GetAuthors(c echo.Context) error {
 	return c.JSON(http.StatusOK, r)
 }
 
-// DeleteAuthor
+// DeleteAuthorById
 // @Summary Delete an author by ID.
 // @Description Delete an author by ID.
 // @Tags Author
@@ -45,11 +45,11 @@ func (h *AuthorHandler) GetAuthors(c echo.Context) error {
 // @Failure 404 {string} string "Not found"
 // @Failure 500 {object} utils.Error
 // @Router /api/v1/author/{id} [delete]
-func (h *AuthorHandler) DeleteAuthor(c echo.Context) error {
+func (h *AuthorHandler) DeleteAuthorById(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		log.Println(err)
-		return c.JSON(http.StatusBadRequest, "ID is invaliddddd")
+		return c.JSON(http.StatusBadRequest, "ID is invalid")
 	}
 
 	err = h.AuthorService.DeleteAuthor(id)
