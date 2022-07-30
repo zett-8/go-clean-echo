@@ -171,6 +171,11 @@ func TestGetAuthorsSuccessCase(t *testing.T) {
 http://localhost:8888/swagger/index.html
 ```
 
+## ✅ Testing
+```shell
+make test
+```
+
 ## 💜 References
 [bxcodec/go-clean-arch](https://github.com/bxcodec/go-clean-arch)  
 [onakrainikoff/echo-rest-api](https://github.com/onakrainikoff/echo-rest-api)  
