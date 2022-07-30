@@ -48,6 +48,45 @@ const docTemplate = `{
                     }
                 }
             },
+            "put": {
+                "description": "Update an author.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Author"
+                ],
+                "summary": "Update an author.",
+                "responses": {
+                    "200": {
+                        "description": "Updated ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create an author.",
                 "consumes": [
@@ -112,15 +151,15 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "ID is invalid",
+                        "description": "Bad Request",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/utils.Error"
                         }
                     },
                     "404": {
-                        "description": "Not found",
+                        "description": "Not Found",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/utils.Error"
                         }
                     },
                     "500": {
@@ -194,15 +233,15 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "ID is invalid",
+                        "description": "Bad Request",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/utils.Error"
                         }
                     },
                     "404": {
-                        "description": "Not found",
+                        "description": "Not Found",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/utils.Error"
                         }
                     },
                     "500": {
@@ -247,7 +286,9 @@ const docTemplate = `{
         "utils.Error": {
             "type": "object",
             "properties": {
-                "message": {}
+                "message": {
+                    "type": "string"
+                }
             }
         }
     }

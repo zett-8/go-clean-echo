@@ -8,6 +8,7 @@ import (
 type AuthorService interface {
 	GetAuthors() ([]models.Author, error)
 	CreateAuthor(a *models.Author) (int64, error)
+	UpdateAuthorById(a *models.Author) (int64, error)
 	DeleteAuthor(id int) error
 }
 
@@ -22,6 +23,11 @@ func (s *AuthorServiceContext) GetAuthors() ([]models.Author, error) {
 
 func (s *AuthorServiceContext) CreateAuthor(a *models.Author) (int64, error) {
 	r, err := s.store.Create(a)
+	return r, err
+}
+
+func (s *AuthorServiceContext) UpdateAuthorById(a *models.Author) (int64, error) {
+	r, err := s.store.UpdateById(a)
 	return r, err
 }
 

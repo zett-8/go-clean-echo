@@ -8,6 +8,7 @@ import (
 type AuthorStore interface {
 	Get() ([]models.Author, error)
 	Create(author *models.Author) (int64, error)
+	UpdateById(author *models.Author) (int64, error)
 	DeleteById(id int) error
 }
 
@@ -43,6 +44,24 @@ func (s *AuthorStoreContext) Create(author *models.Author) (int64, error) {
 
 	err = query.QueryRow(author.Name, author.Country).Scan(&id)
 	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
+}
+
+func (s *AuthorStoreContext) UpdateById(author *models.Author) (int64, error) {
+	query, err := s.Prepare("UPDATE authors SET name = $1, country = $2 WHERE authors.id = $3 RETURNING id;")
+	if err != nil {
+		return 0, err
+	}
+
+	var id int64
+
+	err = query.QueryRow(author.Name, author.Country, author.ID).Scan(&id)
+	if id == 0 {
+		return 0, sql.ErrNoRows
+	} else if err != nil {
 		return 0, err
 	}
 

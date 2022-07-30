@@ -20,7 +20,8 @@ definitions:
     type: object
   utils.Error:
     properties:
-      message: {}
+      message:
+        type: string
     type: object
 host: localhost:8888
 info:
@@ -73,6 +74,32 @@ paths:
       summary: Create an author.
       tags:
       - Author
+    put:
+      consumes:
+      - '*/*'
+      description: Update an author.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated ID
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.Error'
+      summary: Update an author.
+      tags:
+      - Author
   /api/v1/author/{id}:
     delete:
       consumes:
@@ -92,13 +119,13 @@ paths:
           schema:
             type: string
         "400":
-          description: ID is invalid
+          description: Bad Request
           schema:
-            type: string
+            $ref: '#/definitions/utils.Error'
         "404":
-          description: Not found
+          description: Not Found
           schema:
-            type: string
+            $ref: '#/definitions/utils.Error'
         "500":
           description: Internal Server Error
           schema:
@@ -146,13 +173,13 @@ paths:
           schema:
             type: integer
         "400":
-          description: ID is invalid
+          description: Bad Request
           schema:
-            type: string
+            $ref: '#/definitions/utils.Error'
         "404":
-          description: Not found
+          description: Not Found
           schema:
-            type: string
+            $ref: '#/definitions/utils.Error'
         "500":
           description: Internal Server Error
           schema:

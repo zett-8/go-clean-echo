@@ -29,6 +29,7 @@ func Set(e *echo.Echo, h *Handlers) {
 	// Author
 	g.GET("/author", h.AuthorHandler.GetAuthors)
 	g.POST("/author", h.AuthorHandler.CreateAuthor)
+	g.PUT("/author", h.AuthorHandler.UpdateAuthorById)
 	g.DELETE("/author/:id", h.AuthorHandler.DeleteAuthorById)
 	// Book
 	g.GET("/book", h.BookHandler.GetBooks)

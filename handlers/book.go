@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"database/sql"
-	"errors"
 	"github.com/labstack/echo/v4"
 	"github.com/zett-8/go-clean-echo/services"
 	"github.com/zett-8/go-clean-echo/utils"
@@ -29,7 +28,7 @@ func (h *BookHandler) GetBooks(c echo.Context) error {
 
 	if err != nil {
 		log.Println(err)
-		return c.JSON(http.StatusInternalServerError, utils.Error{Message: err})
+		return c.JSON(http.StatusInternalServerError, utils.Error{Message: err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, r)
@@ -51,16 +50,16 @@ func (h *BookHandler) DeleteBook(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		log.Println(err)
-		return c.JSON(http.StatusBadRequest, utils.Error{Message: errors.New("ID is Invalid")})
+		return c.JSON(http.StatusBadRequest, utils.Error{Message: "ID is Invalid"})
 	}
 
 	err = h.BookService.DeleteBookById(id)
 
 	if err == sql.ErrNoRows {
-		return c.JSON(http.StatusNotFound, utils.Error{Message: errors.New("not found")})
+		return c.JSON(http.StatusNotFound, utils.Error{Message: "not found"})
 	} else if err != nil {
 		log.Println(err)
-		return c.JSON(http.StatusInternalServerError, utils.Error{Message: err})
+		return c.JSON(http.StatusInternalServerError, utils.Error{Message: err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, "OK")
