@@ -11,11 +11,11 @@ This makes it super easy to replace each layer. (also good for testing)
 ![clean architecture](./utils/img.png)
 
 #### What you can see in this repo
-- [x] echo (Framework)
+- [x] [echo](https://github.com/labstack/echo)(Framework) for handling requests
 - [x] Clean architecture
-- [x] swagger for documentation
-- [x] sql-mock for testing
-- [x] goose for migration
+- [x] swagger([swaggo/echo-swagger](https://github.com/swaggo/echo-swagger)) for documentation
+- [x] sqlmock ([DATA-DOG/go-sqlmock](https://github.com/DATA-DOG/go-sqlmock)) for testing
+- [x] goose([pressly/goose](https://github.com/pressly/goose)) for migration
 - [x] Multi-stage build for optimized docker image
 
 ## 👟 How to run
