@@ -1,5 +1,4 @@
 tmp
 .idea
 
-configs/auth0.go
-public/auth0config.js
+#configs/auth0.go

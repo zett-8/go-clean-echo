@@ -1,5 +1,7 @@
 # Go Echo Simple API with Clean Architecture
 
+[![Build & Unit Test](https://github.com/zett-8/go-clean-echo/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/zett-8/go-clean-echo/actions/workflows/test.yml)
+
 ## 🤓 About this repo
 This is a sample of Web API built by Go (Echo) according to *Clean architecture*.  
 But I have to say that I'm not a backend specialist nor of Go, so Clean architecture here could be wrong or missing essential concepts. (I'm sorry in that case)
@@ -38,13 +40,13 @@ go mod download
 Fill out auth0 config to run with JWT authentication. Or simply disable JWT middleware
 ```go
 // configs/auth0.go
-var Auth0Config = auth0Config{
-	Domain:             "",
-	ClientID:           "",
-	Issuer:             "",
-	Audience:           []string{""},
-	SignatureAlgorithm: validator.RS256,
-	CacheDuration:      15 * time.Minute,
+var Auth0Config = Auth0ConfigType{
+    Domain:             "****",
+    ClientID:           "****",
+    Audience:           []string{"****"},
+    Issuer:             "****",
+    SignatureAlgorithm: validator.RS256,
+    CacheDuration:      15 * time.Minute,
 }
 
 // or 
