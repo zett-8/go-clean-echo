@@ -5,7 +5,10 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 	echoSwagger "github.com/swaggo/echo-swagger"
+	"github.com/zett-8/go-clean-echo/configs"
 	"github.com/zett-8/go-clean-echo/services"
+	"github.com/zett-8/go-clean-echo/utils"
+	"net/http"
 	"strings"
 )
 
@@ -21,11 +24,20 @@ func New(s *services.Services) *Handlers {
 	}
 }
 
-func Set(e *echo.Echo, h *Handlers) {
-	e.GET("/", IndexHandler)
-	e.GET("/swagger/*", echoSwagger.WrapHandler)
+func SetDefault(e *echo.Echo) {
+	utils.SetHTMLTemplateRenderer(e)
 
+	e.GET("/", func(c echo.Context) error {
+		return c.Render(http.StatusOK, "data", configs.Auth0Config)
+	})
+	e.GET("/healthcheck", HealthCheckHandler)
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
+}
+
+func SetApi(e *echo.Echo, h *Handlers, m echo.MiddlewareFunc) {
 	g := e.Group("/api/v1")
+	g.Use(m)
+
 	// Author
 	g.GET("/author", h.AuthorHandler.GetAuthors)
 	g.POST("/author", h.AuthorHandler.CreateAuthor)

@@ -5,6 +5,7 @@ import (
 	database "github.com/zett-8/go-clean-echo/db"
 	_ "github.com/zett-8/go-clean-echo/docs"
 	"github.com/zett-8/go-clean-echo/handlers"
+	"github.com/zett-8/go-clean-echo/middlewares"
 	"github.com/zett-8/go-clean-echo/services"
 	"github.com/zett-8/go-clean-echo/stores"
 	"log"
@@ -36,7 +37,13 @@ func main() {
 	ss := services.New(s)
 	h := handlers.New(ss)
 
-	handlers.Set(e, h)
+	jwtCheck, err := middlewares.JwtMiddleware()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	handlers.SetDefault(e)
+	handlers.SetApi(e, h, jwtCheck)
 
 	PORT := os.Getenv("PORT")
 	if PORT == "" {

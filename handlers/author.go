@@ -20,6 +20,8 @@ type AuthorHandler struct {
 // @Description Fetch a list of all authors.
 // @Tags Author
 // @Accept */*
+// @Param Authorization header string true "'Bearer _YOUR_TOKEN_'"
+// @Security Bearer Authentication
 // @Produce json
 // @Success 200 {object} []models.Author
 // @Failure 500 {object} utils.Error
@@ -40,6 +42,8 @@ func (h *AuthorHandler) GetAuthors(c echo.Context) error {
 // @Description Create an author.
 // @Tags Author
 // @Accept */*
+// @Param Authorization header string true "'Bearer _YOUR_TOKEN_'"
+// @Security Bearer Authentication
 // @Produce json
 // @Success 200 {integer} integer "Created ID"
 // @Failure 400 {object} utils.Error
@@ -67,6 +71,8 @@ func (h *AuthorHandler) CreateAuthor(c echo.Context) error {
 // @Description Update an author.
 // @Tags Author
 // @Accept */*
+// @Param Authorization header string true "'Bearer _YOUR_TOKEN_'"
+// @Security Bearer Authentication
 // @Produce json
 // @Success 200 {integer} integer "Updated ID"
 // @Failure 400 {object} utils.Error
@@ -97,8 +103,10 @@ func (h *AuthorHandler) UpdateAuthorById(c echo.Context) error {
 // @Description Delete an author by ID.
 // @Tags Author
 // @Accept */*
+// @Security Bearer Authentication
 // @Produce json
 // @Param id path int true "Author id"
+// @Param Authorization header string true "'Bearer _YOUR_TOKEN_'"
 // @Success 200 {string} string "OK"
 // @Failure 400 {object} utils.Error
 // @Failure 404 {object} utils.Error

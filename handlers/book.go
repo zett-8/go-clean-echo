@@ -19,6 +19,8 @@ type BookHandler struct {
 // @Description Fetch a list of all books.
 // @Tags Book
 // @Accept */*
+// @Security Bearer Authentication
+// @Param Authorization header string true "'Bearer _YOUR_TOKEN_'"
 // @Produce json
 // @Success 200 {object} []models.Book
 // @Failure 500 {object} utils.Error
@@ -39,8 +41,10 @@ func (h *BookHandler) GetBooks(c echo.Context) error {
 // @Description Delete a book by ID.
 // @Tags Book
 // @Accept */*
+// @Security Bearer Authentication
 // @Produce json
 // @Param id path int true "Book id"
+// @Param Authorization header string true "'Bearer _YOUR_TOKEN_'"
 // @Success 200 {integer} int "Deleted Book ID"
 // @Failure 400 {object} utils.Error
 // @Failure 404 {object} utils.Error

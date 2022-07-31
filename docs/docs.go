@@ -19,6 +19,11 @@ const docTemplate = `{
     "paths": {
         "/api/v1/author": {
             "get": {
+                "security": [
+                    {
+                        "Bearer Authentication": []
+                    }
+                ],
                 "description": "Fetch a list of all authors.",
                 "consumes": [
                     "*/*"
@@ -30,6 +35,15 @@ const docTemplate = `{
                     "Author"
                 ],
                 "summary": "Fetch a list of all authors.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "'Bearer _YOUR_TOKEN_'",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -49,6 +63,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "Bearer Authentication": []
+                    }
+                ],
                 "description": "Update an author.",
                 "consumes": [
                     "*/*"
@@ -60,6 +79,15 @@ const docTemplate = `{
                     "Author"
                 ],
                 "summary": "Update an author.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "'Bearer _YOUR_TOKEN_'",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Updated ID",
@@ -88,6 +116,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "Bearer Authentication": []
+                    }
+                ],
                 "description": "Create an author.",
                 "consumes": [
                     "*/*"
@@ -99,6 +132,15 @@ const docTemplate = `{
                     "Author"
                 ],
                 "summary": "Create an author.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "'Bearer _YOUR_TOKEN_'",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Created ID",
@@ -123,6 +165,11 @@ const docTemplate = `{
         },
         "/api/v1/author/{id}": {
             "delete": {
+                "security": [
+                    {
+                        "Bearer Authentication": []
+                    }
+                ],
                 "description": "Delete an author by ID.",
                 "consumes": [
                     "*/*"
@@ -140,6 +187,13 @@ const docTemplate = `{
                         "description": "Author id",
                         "name": "id",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "'Bearer _YOUR_TOKEN_'",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -173,6 +227,11 @@ const docTemplate = `{
         },
         "/api/v1/book": {
             "get": {
+                "security": [
+                    {
+                        "Bearer Authentication": []
+                    }
+                ],
                 "description": "Fetch a list of all books.",
                 "consumes": [
                     "*/*"
@@ -184,6 +243,15 @@ const docTemplate = `{
                     "Book"
                 ],
                 "summary": "Fetch a list of all books.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "'Bearer _YOUR_TOKEN_'",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -205,6 +273,11 @@ const docTemplate = `{
         },
         "/api/v1/book/{id}": {
             "delete": {
+                "security": [
+                    {
+                        "Bearer Authentication": []
+                    }
+                ],
                 "description": "Delete a book by ID.",
                 "consumes": [
                     "*/*"
@@ -222,6 +295,13 @@ const docTemplate = `{
                         "description": "Book id",
                         "name": "id",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "'Bearer _YOUR_TOKEN_'",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],

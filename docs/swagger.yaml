@@ -36,6 +36,12 @@ paths:
       consumes:
       - '*/*'
       description: Fetch a list of all authors.
+      parameters:
+      - description: '''Bearer _YOUR_TOKEN_'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -49,6 +55,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/utils.Error'
+      security:
+      - Bearer Authentication: []
       summary: Fetch a list of all authors.
       tags:
       - Author
@@ -56,6 +64,12 @@ paths:
       consumes:
       - '*/*'
       description: Create an author.
+      parameters:
+      - description: '''Bearer _YOUR_TOKEN_'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -71,6 +85,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/utils.Error'
+      security:
+      - Bearer Authentication: []
       summary: Create an author.
       tags:
       - Author
@@ -78,6 +94,12 @@ paths:
       consumes:
       - '*/*'
       description: Update an author.
+      parameters:
+      - description: '''Bearer _YOUR_TOKEN_'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -97,6 +119,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/utils.Error'
+      security:
+      - Bearer Authentication: []
       summary: Update an author.
       tags:
       - Author
@@ -111,6 +135,11 @@ paths:
         name: id
         required: true
         type: integer
+      - description: '''Bearer _YOUR_TOKEN_'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -130,6 +159,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/utils.Error'
+      security:
+      - Bearer Authentication: []
       summary: Delete an author by ID.
       tags:
       - Author
@@ -138,6 +169,12 @@ paths:
       consumes:
       - '*/*'
       description: Fetch a list of all books.
+      parameters:
+      - description: '''Bearer _YOUR_TOKEN_'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -151,6 +188,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/utils.Error'
+      security:
+      - Bearer Authentication: []
       summary: Fetch a list of all books.
       tags:
       - Book
@@ -165,6 +204,11 @@ paths:
         name: id
         required: true
         type: integer
+      - description: '''Bearer _YOUR_TOKEN_'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -184,6 +228,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/utils.Error'
+      security:
+      - Bearer Authentication: []
       summary: Delete a book by ID.
       tags:
       - Book

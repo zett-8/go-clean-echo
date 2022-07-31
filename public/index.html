@@ -1,0 +1,74 @@
+{{define "data"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Go clean echo</title>
+
+    <style>
+        div#token {
+            display: none;
+            width: 560px;
+            padding: 24px;
+            margin-top: 20px;
+
+            white-space: pre-wrap;
+            word-break: break-all;
+            line-height: 1.5;
+            border: 1px grey solid;
+        }
+    </style>
+</head>
+<body>
+    <h2>Go clean echo</h2>
+
+    <p>Welcome to our page!</p>
+
+    <p>
+        <a href="http://localhost:8888/swagger/index.html">See API document</a>
+    </p>
+
+    <button id="btn-login" onclick="login()">Log in</button>
+    <button id="btn-logout" onclick="logout()">Log out</button>
+    <button id="btn-info" onclick="gettoken()">Get token</button>
+
+    <div id="token"></div>
+
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/1.20/auth0-spa-js.production.js"></script>
+
+    <script>
+        let auth0;
+
+        (async () => {
+            auth0 = await createAuth0Client({
+                domain: {{.Domain}},
+                client_id: {{.ClientID}},
+                audience: {{.Audience}},
+            })
+
+            gettoken()
+        })()
+
+        const login = async () => {
+            await auth0.loginWithRedirect({
+                redirect_uri: 'http://localhost:8888/'
+            })
+        }
+
+        const logout = async () => {
+            auth0.logout({
+                returnTo: 'http://localhost:8888/'
+            })
+        }
+
+        const gettoken = async () => {
+            const accessToken = await auth0.getTokenSilently()
+            const div = document.getElementById('token')
+            div.innerText = accessToken
+            div.style.display = 'block'
+        }
+    </script>
+
+</body>
+</html>
+{{end}}
