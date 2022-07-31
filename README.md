@@ -18,6 +18,7 @@ This makes it super easy to replace each layer. (also good for testing)
 - [x] goose([pressly/goose](https://github.com/pressly/goose)) for migration
 - [x] Multi-stage build for optimized docker image
 - [x] Hot reload([cosmtrek/air](https://github.com/cosmtrek/air)) for efficient development
+- [x] JWT authentication([auth0/go-jwt-middleware](https://github.com/auth0/go-jwt-middleware/)) with [Auth0](https://auth0.com/) for security
 
 ## 👟 How to run
 Install.
