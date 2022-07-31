@@ -201,6 +201,6 @@ make test
 ## 💜 References
 [bxcodec/go-clean-arch](https://github.com/bxcodec/go-clean-arch)  
 [onakrainikoff/echo-rest-api](https://github.com/onakrainikoff/echo-rest-api)  
+[satishbabariya/go-echo-auth0-middleware](https://github.com/satishbabariya/go-echo-auth0-middleware)
 [xesina/golang-echo-realworld-example-app](https://github.com/xesina/golang-echo-realworld-example-app)  
-
 
