@@ -10,7 +10,7 @@ This makes it super easy to replace each layer. (also good for testing)
 
 ![clean architecture](./utils/img.png)
 
-#### What you can see in this repo
+#### What you see in this repo
 - [x] [echo](https://github.com/labstack/echo)(Framework) for handling requests
 - [x] Clean architecture
 - [x] swagger([swaggo/echo-swagger](https://github.com/swaggo/echo-swagger)) for documentation
@@ -31,6 +31,27 @@ cd go-clean-echo
 Download dependencies.
 ```shell
 go mod download
+```
+
+Fill out auth0 config to run with JWT authentication. Or simply disable JWT middleware
+```go
+// configs/auth0.go
+var Auth0Config = auth0Config{
+	Domain:             "",
+	ClientID:           "",
+	Issuer:             "",
+	Audience:           []string{""},
+	SignatureAlgorithm: validator.RS256,
+	CacheDuration:      15 * time.Minute,
+}
+
+// or 
+
+// handlers/handlers.go
+func SetApi(e *echo.Echo, h *Handlers, m echo.MiddlewareFunc) {
+    g := e.Group("/api/v1")
+    g.Use(m) // <- Comment out this line
+}
 ```
 
 Run docker.

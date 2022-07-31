@@ -19,8 +19,8 @@ type auth0ConfigSample struct {
 var Auth0ConfigSample = auth0ConfigSample{
 	Domain:             "",
 	ClientID:           "",
-	Audience:           []string{""},
 	Issuer:             "",
+	Audience:           []string{""},
 	SignatureAlgorithm: validator.RS256,
 	CacheDuration:      15 * time.Minute,
 }
