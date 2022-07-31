@@ -29,7 +29,7 @@ func TestAuthorStore_GetSuccessCase(t *testing.T) {
 
 	s := New(mockDB)
 
-	r, err := s.AuthorStore.Get()
+	r, err := s.AuthorStore.Get(nil)
 
 	assert.NoError(t, err)
 	assert.Equal(t, authors, r)
@@ -47,12 +47,16 @@ func TestAuthorStore_CreateSuccessCase(t *testing.T) {
 	}
 
 	mock.NewRows([]string{"id", "name", "country"})
-	pr := mock.ExpectPrepare("INSERT INTO authors (name, country) VALUES ($1, $2) RETURNING id")
-	pr.ExpectQuery().WithArgs(a.Name, a.Country).WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+	mock.
+		ExpectQuery("INSERT INTO authors (name, country) VALUES ($1, $2) RETURNING id").
+		WithArgs(a.Name, a.Country).
+		WillReturnRows(
+			sqlmock.NewRows([]string{"id"}).AddRow(1),
+		)
 
 	s := New(mockDB)
 
-	r, err := s.Create(a)
+	r, err := s.Create(nil, a)
 
 	assert.NoError(t, err)
 	assert.Equal(t, int64(1), r)
@@ -75,11 +79,16 @@ func TestAuthorStore_UpdateByIdSuccessCase(t *testing.T) {
 	a.Country = "new country"
 
 	pr := mock.ExpectPrepare("UPDATE authors SET name = $1, country = $2 WHERE authors.id = $3 RETURNING id")
-	pr.ExpectQuery().WithArgs(a.Name, a.Country, a.ID).WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(a.ID))
+	pr.
+		ExpectQuery().
+		WithArgs(a.Name, a.Country, a.ID).
+		WillReturnRows(
+			sqlmock.NewRows([]string{"id"}).AddRow(a.ID),
+		)
 
 	s := New(mockDB)
 
-	r, err := s.UpdateById(a)
+	r, err := s.UpdateById(nil, a)
 
 	assert.NoError(t, err)
 	assert.Equal(t, int64(a.ID), r)
@@ -112,7 +121,7 @@ func TestAuthorStore_DeleteByIdSuccessCase(t *testing.T) {
 
 	s := New(mockDB)
 
-	assert.NoError(t, s.AuthorStore.DeleteById(deletingID))
-	assert.Equal(t, s.AuthorStore.DeleteById(deletingID), sql.ErrNoRows)
+	assert.NoError(t, s.AuthorStore.DeleteById(nil, deletingID))
+	assert.Equal(t, s.AuthorStore.DeleteById(nil, deletingID), sql.ErrNoRows)
 	assert.NoError(t, mock.ExpectationsWereMet())
 }

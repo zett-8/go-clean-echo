@@ -6,15 +6,15 @@ import (
 )
 
 type BookStore interface {
-	Get() ([]models.Book, error)
-	DeleteById(id int) error
+	Get(tx *sql.Tx) ([]models.Book, error)
+	DeleteById(tx *sql.Tx, id int) error
 }
 
 type BookStoreContext struct {
 	*sql.DB
 }
 
-func (s *BookStoreContext) Get() ([]models.Book, error) {
+func (s *BookStoreContext) Get(tx *sql.Tx) ([]models.Book, error) {
 	books := make([]models.Book, 0)
 
 	query := "SELECT id, name, author_id from books"
@@ -33,7 +33,7 @@ func (s *BookStoreContext) Get() ([]models.Book, error) {
 	return books, nil
 }
 
-func (s *BookStoreContext) DeleteById(id int) error {
+func (s *BookStoreContext) DeleteById(tx *sql.Tx, id int) error {
 	query := "DELETE FROM books WHERE books.id = $1 RETURNING books.id"
 
 	row, err := s.Exec(query, id)

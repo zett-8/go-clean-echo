@@ -8,30 +8,54 @@ import (
 type AuthorService interface {
 	GetAuthors() ([]models.Author, error)
 	CreateAuthor(a *models.Author) (int64, error)
+	CreateAuthorWithBooks(a *models.Author, bs *[]models.Book) (int64, error)
 	UpdateAuthorById(a *models.Author) (int64, error)
 	DeleteAuthor(id int) error
 }
 
 type AuthorServiceContext struct {
-	store stores.AuthorStore
+	stores *stores.Stores
 }
 
 func (s *AuthorServiceContext) GetAuthors() ([]models.Author, error) {
-	r, err := s.store.Get()
+	r, err := s.stores.AuthorStore.Get(nil)
 	return r, err
 }
 
 func (s *AuthorServiceContext) CreateAuthor(a *models.Author) (int64, error) {
-	r, err := s.store.Create(a)
+	r, err := s.stores.AuthorStore.Create(nil, a)
 	return r, err
 }
 
+func (s *AuthorServiceContext) CreateAuthorWithBooks(a *models.Author, bs *[]models.Book) (int64, error) {
+	tx, err := s.stores.DB.Begin()
+	if err != nil {
+		return 0, err
+	}
+
+	id, err := s.stores.AuthorStore.Create(tx, a)
+	if err != nil {
+		s.stores.RollBack(tx)
+		return 0, err
+	}
+
+	// run other SQL
+
+	err = s.stores.Commit(tx)
+	if err != nil {
+		s.stores.RollBack(tx)
+		return 0, err
+	}
+
+	return id, nil
+}
+
 func (s *AuthorServiceContext) UpdateAuthorById(a *models.Author) (int64, error) {
-	r, err := s.store.UpdateById(a)
+	r, err := s.stores.AuthorStore.UpdateById(nil, a)
 	return r, err
 }
 
 func (s *AuthorServiceContext) DeleteAuthor(id int) error {
-	err := s.store.DeleteById(id)
+	err := s.stores.AuthorStore.DeleteById(nil, id)
 	return err
 }

@@ -29,7 +29,7 @@ func TestBookStore_GetSuccessCase(t *testing.T) {
 
 	s := New(mockDB)
 
-	r, err := s.BookStore.Get()
+	r, err := s.BookStore.Get(nil)
 
 	assert.NoError(t, err)
 	assert.Equal(t, books, r)
@@ -62,7 +62,7 @@ func TestBookStore_DeleteByIdSuccessCase(t *testing.T) {
 
 	s := New(mockDB)
 
-	assert.NoError(t, s.BookStore.DeleteById(deletingID))
-	assert.Equal(t, s.BookStore.DeleteById(deletingID), sql.ErrNoRows)
+	assert.NoError(t, s.BookStore.DeleteById(nil, deletingID))
+	assert.Equal(t, s.BookStore.DeleteById(nil, deletingID), sql.ErrNoRows)
 	assert.NoError(t, mock.ExpectationsWereMet())
 }

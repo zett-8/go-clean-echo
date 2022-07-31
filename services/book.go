@@ -11,15 +11,15 @@ type BookService interface {
 }
 
 type BookServiceContext struct {
-	store stores.BookStore
+	stores *stores.Stores
 }
 
 func (s *BookServiceContext) GetBooks() ([]models.Book, error) {
-	r, err := s.store.Get()
+	r, err := s.stores.BookStore.Get(nil)
 	return r, err
 }
 
 func (s *BookServiceContext) DeleteBookById(id int) error {
-	err := s.store.DeleteById(id)
+	err := s.stores.BookStore.DeleteById(nil, id)
 	return err
 }

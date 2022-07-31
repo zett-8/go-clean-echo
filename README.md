@@ -10,10 +10,11 @@ This makes it super easy to replace each layer. (also good for testing)
 
 ![clean architecture](./utils/img.png)
 
-#### What you see in this repo
+#### What you might find helpful in this repo.
 - [x] [echo](https://github.com/labstack/echo)(Framework) for handling requests
 - [x] Clean architecture
 - [x] swagger([swaggo/echo-swagger](https://github.com/swaggo/echo-swagger)) for documentation
+- [x] Database transaction in service layer
 - [x] sqlmock ([DATA-DOG/go-sqlmock](https://github.com/DATA-DOG/go-sqlmock)) for testing
 - [x] goose([pressly/goose](https://github.com/pressly/goose)) for migration
 - [x] Multi-stage build for optimized docker image
@@ -201,6 +202,6 @@ make test
 ## 💜 References
 [bxcodec/go-clean-arch](https://github.com/bxcodec/go-clean-arch)  
 [onakrainikoff/echo-rest-api](https://github.com/onakrainikoff/echo-rest-api)  
-[satishbabariya/go-echo-auth0-middleware](https://github.com/satishbabariya/go-echo-auth0-middleware)
+[satishbabariya/go-echo-auth0-middleware](https://github.com/satishbabariya/go-echo-auth0-middleware)  
 [xesina/golang-echo-realworld-example-app](https://github.com/xesina/golang-echo-realworld-example-app)  
 
