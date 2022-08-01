@@ -6,7 +6,7 @@
 This is a sample of Web API built by Go (Echo) according to *Clean architecture*.  
 But I have to say that I'm not a backend specialist nor of Go, so Clean architecture here could be wrong or missing essential concepts. (I'm sorry in that case)
 
-This sample consists of 4 layers, "Models", "Stores", "Services(Logic)" and "Handlers(Framework)", although naming might differ in another sample.
+This sample consists of 4 layers, **"Models"**, **"Stores"**, **"Services(Logic)"** and **"Handlers(Framework)"**, although naming might differ in other samples.
 Each layer only concerns/handles its inside layer, not the other way around.
 This makes it super easy to replace each layer. (also good for testing)
 
@@ -16,9 +16,9 @@ This makes it super easy to replace each layer. (also good for testing)
 - [x] [echo](https://github.com/labstack/echo)(Framework) for handling requests
 - [x] Clean architecture
 - [x] swagger([swaggo/echo-swagger](https://github.com/swaggo/echo-swagger)) for documentation
+- [x] goose([pressly/goose](https://github.com/pressly/goose)) for migration
 - [x] Database transaction in service layer
 - [x] sqlmock ([DATA-DOG/go-sqlmock](https://github.com/DATA-DOG/go-sqlmock)) for testing
-- [x] goose([pressly/goose](https://github.com/pressly/goose)) for migration
 - [x] Multi-stage build for optimized docker image
 - [x] Hot reload([cosmtrek/air](https://github.com/cosmtrek/air)) for efficient development
 - [x] JWT authentication([auth0/go-jwt-middleware](https://github.com/auth0/go-jwt-middleware/)) with [Auth0](https://auth0.com/) for security
