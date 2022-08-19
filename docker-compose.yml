@@ -5,6 +5,8 @@ services:
     build:
       context: .
       target: base
+      args:
+        PORT: 8888
     command: "air"
     ports:
       - "8888:8888"
