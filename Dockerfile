@@ -4,7 +4,7 @@ ARG PORT=8888
 ENV PORT=$PORT
 ENV GO_ENV=development
 
-WORKDIR /app/go/base
+WORKDIR /go/app/base
 
 COPY go.mod .
 COPY go.sum .
@@ -20,21 +20,20 @@ FROM golang:1.18-alpine as builder
 ARG PORT=8888
 ENV PORT=$PORT
 
-WORKDIR /app/go/builder
+WORKDIR /go/app/builder
 
-COPY --from=base /app/go/base /app/go/builder
+COPY --from=base /go/app/base /go/app/builder
 
 RUN CGO_ENABLED=0 go build -o main -ldflags "-s -w"
 
-FROM alpine as production
+FROM gcr.io/distroless/static-debian11 as production
 
 ARG PORT=8888
 ENV PORT=$PORT
 
-WORKDIR /app/go/src
+WORKDIR /go/app/src
 
-RUN apk add --no-cache ca-certificates
-COPY --from=builder /app/go/builder/main /app/go/src/main
+COPY --from=builder /go/app/builder/main /go/app/src/main
 
 EXPOSE $PORT
 

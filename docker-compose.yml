@@ -11,7 +11,7 @@ services:
     ports:
       - "8888:8888"
     volumes:
-      - .:/app/go/base
+      - .:/go/app/base
     depends_on:
      - echo-db
 
