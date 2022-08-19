@@ -1,6 +1,7 @@
 FROM golang:1.18-alpine as base
 
-ENV PORT=8888
+ARG PORT=8888
+ENV PORT=$PORT
 ENV GO_ENV=development
 
 WORKDIR /app/go/base
@@ -16,21 +17,25 @@ COPY . .
 
 FROM golang:1.18-alpine as builder
 
-ENV PORT=8888
+ARG PORT=8888
+ENV PORT=$PORT
 
 WORKDIR /app/go/builder
 
 COPY --from=base /app/go/base /app/go/builder
 
-RUN CGO_ENABLED=0 go build main.go
+RUN CGO_ENABLED=0 go build -o main -ldflags "-s -w"
 
 FROM alpine as production
+
+ARG PORT=8888
+ENV PORT=$PORT
 
 WORKDIR /app/go/src
 
 RUN apk add --no-cache ca-certificates
 COPY --from=builder /app/go/builder/main /app/go/src/main
 
-EXPOSE 8888
+EXPOSE $PORT
 
 CMD ["/app/go/src/main"]
