@@ -2,6 +2,7 @@ package utils
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/zett-8/go-clean-echo/public"
 	"html/template"
 	"io"
 )
@@ -16,7 +17,7 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 
 func SetHTMLTemplateRenderer(e *echo.Echo) {
 	t := &Template{
-		templates: template.Must(template.ParseGlob("public/index.html")),
+		templates: template.Must(template.ParseFS(public.Files, "*.html")),
 	}
 
 	e.Renderer = t

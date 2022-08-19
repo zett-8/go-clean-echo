@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	_ "embed"
 	"fmt"
 	"github.com/DATA-DOG/go-sqlmock"
 	_ "github.com/lib/pq"
@@ -9,6 +10,9 @@ import (
 	"io/ioutil"
 	"log"
 )
+
+//go:embed migrations/*
+var migrationFiles string
 
 func New(development bool) (*sql.DB, error) {
 	var uri string
@@ -28,7 +32,7 @@ func New(development bool) (*sql.DB, error) {
 		return nil, err
 	}
 
-	if err := goose.Up(db, "db/migrations"); err != nil {
+	if err := goose.Up(db, migrationFiles); err != nil {
 		db.Close()
 		return nil, err
 	}
