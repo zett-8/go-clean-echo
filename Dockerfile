@@ -37,4 +37,4 @@ COPY --from=builder /go/app/builder/main /go/app/src/main
 
 EXPOSE $PORT
 
-CMD ["/app/go/src/main"]
+CMD ["/go/app/src/main"]
