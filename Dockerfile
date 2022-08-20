@@ -1,6 +1,8 @@
+ARG PORT=8888
+
 FROM golang:1.18-alpine as base
 
-ARG PORT=8888
+ARG PORT
 ENV PORT=$PORT
 ENV GO_ENV=development
 
@@ -17,7 +19,7 @@ COPY . .
 
 FROM golang:1.18-alpine as builder
 
-ARG PORT=8888
+ARG PORT
 ENV PORT=$PORT
 
 WORKDIR /go/app/builder
@@ -28,7 +30,7 @@ RUN CGO_ENABLED=0 go build -o main -ldflags "-s -w"
 
 FROM gcr.io/distroless/static-debian11 as production
 
-ARG PORT=8888
+ARG PORT
 ENV PORT=$PORT
 
 WORKDIR /go/app/src
