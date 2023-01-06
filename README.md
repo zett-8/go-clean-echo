@@ -24,6 +24,8 @@ This makes it super easy to replace each layer. (also good for testing)
 - [x] JWT authentication([auth0/go-jwt-middleware](https://github.com/auth0/go-jwt-middleware/)) with [Auth0](https://auth0.com/) for security
 - [x] Automated testing on GitHub actions 
 
+<br />
+
 ## 👟 How to run
 Install.
 ```shell
@@ -62,6 +64,8 @@ Run docker.
 ```shell
 docker-compose up
 ```
+
+<br />
 
 ## 🌱 Tips 
 
@@ -199,15 +203,21 @@ func TestGetAuthorsSuccessCase(t *testing.T) {
 }
 ```
 
+<br />
+
 ## 📃 API Document (Swagger)
 ```text
 http://localhost:8888/swagger/index.html
 ```
 
+<br />
+
 ## ✅ Testing
 ```shell
 make test
 ```
+
+<br />
 
 ## 💜 References
 [bxcodec/go-clean-arch](https://github.com/bxcodec/go-clean-arch)  
