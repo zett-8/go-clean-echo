@@ -19,8 +19,8 @@ type Handlers struct {
 
 func New(s *services.Services) *Handlers {
 	return &Handlers{
-		AuthorHandler: &authorHandler{s.AuthorService},
-		BookHandler:   &bookHandler{s.BookService},
+		AuthorHandler: &authorHandler{s.Author},
+		BookHandler:   &bookHandler{s.Book},
 	}
 }
 

@@ -20,12 +20,12 @@ type (
 )
 
 func (s *authorService) GetAuthors() ([]models.Author, error) {
-	r, err := s.stores.AuthorStore.Get(nil)
+	r, err := s.stores.Author.Get(nil)
 	return r, err
 }
 
 func (s *authorService) CreateAuthor(a *models.Author) (int64, error) {
-	r, err := s.stores.AuthorStore.Create(nil, a)
+	r, err := s.stores.Author.Create(nil, a)
 	return r, err
 }
 
@@ -35,7 +35,7 @@ func (s *authorService) CreateAuthorWithBooks(a *models.Author, bs *[]models.Boo
 		return 0, err
 	}
 
-	id, err := s.stores.AuthorStore.Create(tx, a)
+	id, err := s.stores.Author.Create(tx, a)
 	if err != nil {
 		s.stores.RollBack(tx)
 		return 0, err
@@ -53,11 +53,11 @@ func (s *authorService) CreateAuthorWithBooks(a *models.Author, bs *[]models.Boo
 }
 
 func (s *authorService) UpdateAuthorById(a *models.Author) (int64, error) {
-	r, err := s.stores.AuthorStore.UpdateById(nil, a)
+	r, err := s.stores.Author.UpdateById(nil, a)
 	return r, err
 }
 
 func (s *authorService) DeleteAuthor(id int) error {
-	err := s.stores.AuthorStore.DeleteById(nil, id)
+	err := s.stores.Author.DeleteById(nil, id)
 	return err
 }

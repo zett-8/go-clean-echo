@@ -30,7 +30,7 @@ func TestAuthorServiceContext_CreateAuthorWithBooks_Success(t *testing.T) {
 		)
 	mock.ExpectCommit()
 
-	r, err := services.AuthorService.CreateAuthorWithBooks(a, nil)
+	r, err := services.Author.CreateAuthorWithBooks(a, nil)
 
 	assert.NoError(t, err)
 	assert.Equal(t, int64(1), r)

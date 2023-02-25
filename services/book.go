@@ -17,11 +17,11 @@ type (
 )
 
 func (s *bookService) GetBooks() ([]models.Book, error) {
-	r, err := s.stores.BookStore.Get(nil)
+	r, err := s.stores.Book.Get(nil)
 	return r, err
 }
 
 func (s *bookService) DeleteBookById(id int) error {
-	err := s.stores.BookStore.DeleteById(nil, id)
+	err := s.stores.Book.DeleteById(nil, id)
 	return err
 }

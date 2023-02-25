@@ -5,16 +5,16 @@ import (
 )
 
 type Stores struct {
-	DB *sql.DB
-	AuthorStore
-	BookStore
+	DB     *sql.DB
+	Author AuthorStore
+	Book   BookStore
 }
 
 func New(db *sql.DB) *Stores {
 	return &Stores{
-		DB:          db,
-		AuthorStore: &authorStore{db},
-		BookStore:   &bookStore{db},
+		DB:     db,
+		Author: &authorStore{db},
+		Book:   &bookStore{db},
 	}
 }
 
