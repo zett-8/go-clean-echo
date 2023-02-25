@@ -5,29 +5,31 @@ import (
 	"github.com/zett-8/go-clean-echo/stores"
 )
 
-type AuthorService interface {
-	GetAuthors() ([]models.Author, error)
-	CreateAuthor(a *models.Author) (int64, error)
-	CreateAuthorWithBooks(a *models.Author, bs *[]models.Book) (int64, error)
-	UpdateAuthorById(a *models.Author) (int64, error)
-	DeleteAuthor(id int) error
-}
+type (
+	AuthorService interface {
+		GetAuthors() ([]models.Author, error)
+		CreateAuthor(a *models.Author) (int64, error)
+		CreateAuthorWithBooks(a *models.Author, bs *[]models.Book) (int64, error)
+		UpdateAuthorById(a *models.Author) (int64, error)
+		DeleteAuthor(id int) error
+	}
 
-type AuthorServiceContext struct {
-	stores *stores.Stores
-}
+	authorService struct {
+		stores *stores.Stores
+	}
+)
 
-func (s *AuthorServiceContext) GetAuthors() ([]models.Author, error) {
+func (s *authorService) GetAuthors() ([]models.Author, error) {
 	r, err := s.stores.AuthorStore.Get(nil)
 	return r, err
 }
 
-func (s *AuthorServiceContext) CreateAuthor(a *models.Author) (int64, error) {
+func (s *authorService) CreateAuthor(a *models.Author) (int64, error) {
 	r, err := s.stores.AuthorStore.Create(nil, a)
 	return r, err
 }
 
-func (s *AuthorServiceContext) CreateAuthorWithBooks(a *models.Author, bs *[]models.Book) (int64, error) {
+func (s *authorService) CreateAuthorWithBooks(a *models.Author, bs *[]models.Book) (int64, error) {
 	tx, err := s.stores.DB.Begin()
 	if err != nil {
 		return 0, err
@@ -50,12 +52,12 @@ func (s *AuthorServiceContext) CreateAuthorWithBooks(a *models.Author, bs *[]mod
 	return id, nil
 }
 
-func (s *AuthorServiceContext) UpdateAuthorById(a *models.Author) (int64, error) {
+func (s *authorService) UpdateAuthorById(a *models.Author) (int64, error) {
 	r, err := s.stores.AuthorStore.UpdateById(nil, a)
 	return r, err
 }
 
-func (s *AuthorServiceContext) DeleteAuthor(id int) error {
+func (s *authorService) DeleteAuthor(id int) error {
 	err := s.stores.AuthorStore.DeleteById(nil, id)
 	return err
 }

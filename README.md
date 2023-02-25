@@ -137,20 +137,22 @@ type Services struct {
 
 func New(s *stores.Stores) *Services {
     return &Services{
-        AuthorService: &AuthorServiceContext{s.AuthorStore},
-        BookService:   &BookServiceContext{s.BookStore},
+        AuthorService: &authorService{s.AuthorStore},
+        BookService:   &bookService{s.BookStore},
     }
 }
 
 // services/author.go
-type AuthorService interface {
-	GetAuthors() ([]models.Author, error)
-	DeleteAuthor(id int) error
-}
+type (
+    AuthorService interface {
+        GetAuthors() ([]models.Author, error)
+        DeleteAuthor(id int) error
+    }
 
-type AuthorServiceContext struct {
-	store stores.AuthorStore
-}
+    authorService struct {
+        store stores.AuthorStore
+    }
+)
 
 func (s *AuthorServiceContext) GetAuthors() ([]models.Author, error) {
 	r, err := s.store.Get()

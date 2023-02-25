@@ -13,8 +13,8 @@ type Stores struct {
 func New(db *sql.DB) *Stores {
 	return &Stores{
 		DB:          db,
-		AuthorStore: &AuthorStoreContext{db},
-		BookStore:   &BookStoreContext{db},
+		AuthorStore: &authorStore{db},
+		BookStore:   &bookStore{db},
 	}
 }
 

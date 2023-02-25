@@ -9,7 +9,7 @@ type Services struct {
 
 func New(s *stores.Stores) *Services {
 	return &Services{
-		AuthorService: &AuthorServiceContext{stores: s},
-		BookService:   &BookServiceContext{stores: s},
+		AuthorService: &authorService{stores: s},
+		BookService:   &bookService{stores: s},
 	}
 }
