@@ -29,7 +29,7 @@ func TestAuthorStore_GetSuccessCase(t *testing.T) {
 
 	s := New(mockDB)
 
-	r, err := s.AuthorStore.Get(nil)
+	r, err := s.Author.Get(nil)
 
 	assert.NoError(t, err)
 	assert.Equal(t, authors, r)
@@ -56,7 +56,7 @@ func TestAuthorStore_CreateSuccessCase(t *testing.T) {
 
 	s := New(mockDB)
 
-	r, err := s.Create(nil, a)
+	r, err := s.Author.Create(nil, a)
 
 	assert.NoError(t, err)
 	assert.Equal(t, int64(1), r)
@@ -88,7 +88,7 @@ func TestAuthorStore_UpdateByIdSuccessCase(t *testing.T) {
 
 	s := New(mockDB)
 
-	r, err := s.UpdateById(nil, a)
+	r, err := s.Author.UpdateById(nil, a)
 
 	assert.NoError(t, err)
 	assert.Equal(t, int64(a.ID), r)
@@ -121,7 +121,7 @@ func TestAuthorStore_DeleteByIdSuccessCase(t *testing.T) {
 
 	s := New(mockDB)
 
-	assert.NoError(t, s.AuthorStore.DeleteById(nil, deletingID))
-	assert.Equal(t, s.AuthorStore.DeleteById(nil, deletingID), sql.ErrNoRows)
+	assert.NoError(t, s.Author.DeleteById(nil, deletingID))
+	assert.Equal(t, s.Author.DeleteById(nil, deletingID), sql.ErrNoRows)
 	assert.NoError(t, mock.ExpectationsWereMet())
 }
