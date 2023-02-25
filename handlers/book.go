@@ -10,9 +10,16 @@ import (
 	"strconv"
 )
 
-type BookHandler struct {
-	services.BookService
-}
+type (
+	BookHandler interface {
+		GetBooks(c echo.Context) error
+		DeleteBook(c echo.Context) error
+	}
+
+	bookHandler struct {
+		services.BookService
+	}
+)
 
 // GetBooks
 // @Summary Fetch a list of all books.
@@ -25,7 +32,7 @@ type BookHandler struct {
 // @Success 200 {object} []models.Book
 // @Failure 500 {object} utils.Error
 // @Router /api/v1/book [get]
-func (h *BookHandler) GetBooks(c echo.Context) error {
+func (h *bookHandler) GetBooks(c echo.Context) error {
 	r, err := h.BookService.GetBooks()
 
 	if err != nil {
@@ -50,7 +57,7 @@ func (h *BookHandler) GetBooks(c echo.Context) error {
 // @Failure 404 {object} utils.Error
 // @Failure 500 {object} utils.Error
 // @Router /api/v1/book/{id} [delete]
-func (h *BookHandler) DeleteBook(c echo.Context) error {
+func (h *bookHandler) DeleteBook(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		log.Println(err)

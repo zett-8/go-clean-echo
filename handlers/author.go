@@ -11,9 +11,18 @@ import (
 	"strconv"
 )
 
-type AuthorHandler struct {
-	services.AuthorService
-}
+type (
+	AuthorHandler interface {
+		GetAuthors(c echo.Context) error
+		CreateAuthor(c echo.Context) error
+		UpdateAuthorById(c echo.Context) error
+		DeleteAuthorById(c echo.Context) error
+	}
+
+	authorHandler struct {
+		services.AuthorService
+	}
+)
 
 // GetAuthors
 // @Summary Fetch a list of all authors.
@@ -26,7 +35,7 @@ type AuthorHandler struct {
 // @Success 200 {object} []models.Author
 // @Failure 500 {object} utils.Error
 // @Router /api/v1/author [get]
-func (h *AuthorHandler) GetAuthors(c echo.Context) error {
+func (h *authorHandler) GetAuthors(c echo.Context) error {
 	r, err := h.AuthorService.GetAuthors()
 
 	if err != nil {
@@ -49,7 +58,7 @@ func (h *AuthorHandler) GetAuthors(c echo.Context) error {
 // @Failure 400 {object} utils.Error
 // @Failure 500 {object} utils.Error
 // @Router /api/v1/author [post]
-func (h *AuthorHandler) CreateAuthor(c echo.Context) error {
+func (h *authorHandler) CreateAuthor(c echo.Context) error {
 	var a *models.Author
 
 	if err := c.Bind(&a); err != nil {
@@ -79,7 +88,7 @@ func (h *AuthorHandler) CreateAuthor(c echo.Context) error {
 // @Failure 404 {object} utils.Error
 // @Failure 500 {object} utils.Error
 // @Router /api/v1/author [put]
-func (h *AuthorHandler) UpdateAuthorById(c echo.Context) error {
+func (h *authorHandler) UpdateAuthorById(c echo.Context) error {
 	var a *models.Author
 
 	if err := c.Bind(&a); err != nil {
@@ -112,7 +121,7 @@ func (h *AuthorHandler) UpdateAuthorById(c echo.Context) error {
 // @Failure 404 {object} utils.Error
 // @Failure 500 {object} utils.Error
 // @Router /api/v1/author/{id} [delete]
-func (h *AuthorHandler) DeleteAuthorById(c echo.Context) error {
+func (h *authorHandler) DeleteAuthorById(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		log.Println(err)
