@@ -2,7 +2,7 @@ package middlewares
 
 import (
 	"github.com/labstack/echo/v4"
-	"log"
+	"github.com/zett-8/go-clean-echo/logger"
 	"net/http"
 )
 
@@ -16,7 +16,7 @@ func SampleMiddleware() (echo.MiddlewareFunc, error) {
 				return echo.NewHTTPError(http.StatusUnauthorized, "message")
 			}
 
-			log.Println("You are going through sample middleware")
+			logger.Error("You are going through sample middleware")
 			return next(c)
 		}
 	}, nil

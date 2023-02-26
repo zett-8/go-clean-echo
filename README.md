@@ -15,6 +15,7 @@ This makes it super easy to replace each layer. (also good for testing)
 #### What you might find helpful in this repo.
 - [x] [echo](https://github.com/labstack/echo)(Framework) for handling requests
 - [x] Clean architecture
+- [x] zap([uber-go/zap](https://github.com/uber-go/zap)) for logging
 - [x] swagger([swaggo/echo-swagger](https://github.com/swaggo/echo-swagger)) for documentation
 - [x] goose([pressly/goose](https://github.com/pressly/goose)) for migration
 - [x] Database transaction in service layer

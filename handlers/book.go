@@ -3,9 +3,10 @@ package handlers
 import (
 	"database/sql"
 	"github.com/labstack/echo/v4"
+	"github.com/zett-8/go-clean-echo/logger"
 	"github.com/zett-8/go-clean-echo/services"
 	"github.com/zett-8/go-clean-echo/utils"
-	"log"
+	"go.uber.org/zap"
 	"net/http"
 	"strconv"
 )
@@ -36,7 +37,7 @@ func (h *bookHandler) GetBooks(c echo.Context) error {
 	r, err := h.BookService.GetBooks()
 
 	if err != nil {
-		log.Println(err)
+		logger.Error("failed to get book", zap.Error(err))
 		return c.JSON(http.StatusInternalServerError, utils.Error{Message: err.Error()})
 	}
 
@@ -60,7 +61,7 @@ func (h *bookHandler) GetBooks(c echo.Context) error {
 func (h *bookHandler) DeleteBook(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		log.Println(err)
+		logger.Error("failed to convert id", zap.Error(err))
 		return c.JSON(http.StatusBadRequest, utils.Error{Message: "ID is Invalid"})
 	}
 
@@ -69,7 +70,7 @@ func (h *bookHandler) DeleteBook(c echo.Context) error {
 	if err == sql.ErrNoRows {
 		return c.JSON(http.StatusNotFound, utils.Error{Message: "not found"})
 	} else if err != nil {
-		log.Println(err)
+		logger.Error("failed to delete book", zap.Error(err))
 		return c.JSON(http.StatusInternalServerError, utils.Error{Message: err.Error()})
 	}
 

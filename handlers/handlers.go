@@ -3,7 +3,6 @@ package handlers
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/labstack/gommon/log"
 	echoSwagger "github.com/swaggo/echo-swagger"
 	"github.com/zett-8/go-clean-echo/configs"
 	"github.com/zett-8/go-clean-echo/services"
@@ -51,7 +50,6 @@ func SetApi(e *echo.Echo, h *Handlers, m echo.MiddlewareFunc) {
 func Echo() *echo.Echo {
 	e := echo.New()
 
-	e.Logger.SetLevel(log.DEBUG)
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Pre(middleware.RemoveTrailingSlash())

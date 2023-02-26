@@ -3,10 +3,11 @@ package handlers
 import (
 	"database/sql"
 	"github.com/labstack/echo/v4"
+	"github.com/zett-8/go-clean-echo/logger"
 	"github.com/zett-8/go-clean-echo/models"
 	"github.com/zett-8/go-clean-echo/services"
 	"github.com/zett-8/go-clean-echo/utils"
-	"log"
+	"go.uber.org/zap"
 	"net/http"
 	"strconv"
 )
@@ -39,7 +40,7 @@ func (h *authorHandler) GetAuthors(c echo.Context) error {
 	r, err := h.AuthorService.GetAuthors()
 
 	if err != nil {
-		log.Println(err)
+		logger.Error("failed to get author", zap.Error(err))
 		return c.JSON(http.StatusInternalServerError, utils.Error{Message: err.Error()})
 	}
 
@@ -62,13 +63,13 @@ func (h *authorHandler) CreateAuthor(c echo.Context) error {
 	var a *models.Author
 
 	if err := c.Bind(&a); err != nil {
-		log.Println(err)
+		logger.Error("failed to bind req body", zap.Error(err))
 		return c.JSON(http.StatusBadRequest, utils.Error{Message: err.Error()})
 	}
 
 	r, err := h.AuthorService.CreateAuthor(a)
 	if err != nil {
-		log.Println(err)
+		logger.Error("failed to create author", zap.Error(err))
 		return c.JSON(http.StatusInternalServerError, utils.Error{Message: err.Error()})
 	}
 
@@ -92,7 +93,7 @@ func (h *authorHandler) UpdateAuthorById(c echo.Context) error {
 	var a *models.Author
 
 	if err := c.Bind(&a); err != nil {
-		log.Println(err)
+		logger.Error("failed to bind req body", zap.Error(err))
 		return c.JSON(http.StatusBadRequest, utils.Error{Message: "args is invalid"})
 	}
 
@@ -100,7 +101,7 @@ func (h *authorHandler) UpdateAuthorById(c echo.Context) error {
 	if err == sql.ErrNoRows {
 		return c.JSON(http.StatusNotFound, utils.Error{Message: "not found"})
 	} else if err != nil {
-		log.Println(err)
+		logger.Error("failed to update author", zap.Error(err))
 		return c.JSON(http.StatusInternalServerError, utils.Error{Message: err.Error()})
 	}
 
@@ -124,7 +125,7 @@ func (h *authorHandler) UpdateAuthorById(c echo.Context) error {
 func (h *authorHandler) DeleteAuthorById(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		log.Println(err)
+		logger.Error("failed to parse id", zap.Error(err))
 		return c.JSON(http.StatusBadRequest, utils.Error{Message: "ID is invalid"})
 	}
 
@@ -133,7 +134,7 @@ func (h *authorHandler) DeleteAuthorById(c echo.Context) error {
 	if err == sql.ErrNoRows {
 		return c.JSON(http.StatusNotFound, "not found")
 	} else if err != nil {
-		log.Println(err)
+		logger.Error("failed to delete author", zap.Error(err))
 		return c.JSON(http.StatusInternalServerError, utils.Error{Message: err.Error()})
 	}
 

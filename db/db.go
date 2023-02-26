@@ -8,8 +8,9 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	_ "github.com/lib/pq"
 	"github.com/pressly/goose/v3"
+	"github.com/zett-8/go-clean-echo/logger"
+	"go.uber.org/zap"
 	"io/ioutil"
-	"log"
 )
 
 //go:embed migrations/*.sql
@@ -75,7 +76,7 @@ func Mock() (*sql.DB, sqlmock.Sqlmock) {
 	db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
 
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal("failed to create mock db", zap.Error(err))
 	}
 
 	return db, mock

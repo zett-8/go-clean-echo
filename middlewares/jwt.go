@@ -5,7 +5,8 @@ import (
 	"github.com/auth0/go-jwt-middleware/v2/validator"
 	"github.com/labstack/echo/v4"
 	"github.com/zett-8/go-clean-echo/configs"
-	"log"
+	"github.com/zett-8/go-clean-echo/logger"
+	"go.uber.org/zap"
 	"net/http"
 	"net/url"
 	"strings"
@@ -47,7 +48,7 @@ func JwtMiddleware() (echo.MiddlewareFunc, error) {
 
 			claims, err := jwtValidator.ValidateToken(c.Request().Context(), token)
 			if err != nil {
-				log.Println(err)
+				logger.Error("Invalid Token: ", zap.Error(err))
 				return echo.NewHTTPError(http.StatusUnauthorized, "Invalid Token")
 			}
 

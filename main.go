@@ -5,9 +5,11 @@ import (
 	database "github.com/zett-8/go-clean-echo/db"
 	_ "github.com/zett-8/go-clean-echo/docs"
 	"github.com/zett-8/go-clean-echo/handlers"
+	"github.com/zett-8/go-clean-echo/logger"
 	"github.com/zett-8/go-clean-echo/middlewares"
 	"github.com/zett-8/go-clean-echo/services"
 	"github.com/zett-8/go-clean-echo/stores"
+	"go.uber.org/zap"
 	"log"
 	"os"
 )
@@ -25,9 +27,14 @@ var GO_ENV = os.Getenv("GO_ENV")
 func main() {
 	fmt.Println("GO_ENV:", GO_ENV)
 
-	db, err := database.New(GO_ENV == "development")
+	err := logger.New()
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	db, err := database.New(GO_ENV == "development")
+	if err != nil {
+		logger.Fatal("failed to connect to the database", zap.Error(err))
 	}
 	defer db.Close()
 
@@ -39,7 +46,7 @@ func main() {
 
 	jwtCheck, err := middlewares.JwtMiddleware()
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal("failed to set JWT middleware", zap.Error(err))
 	}
 
 	handlers.SetDefault(e)
@@ -50,5 +57,5 @@ func main() {
 		PORT = "8888"
 	}
 
-	log.Fatal(e.Start(":" + PORT))
+	logger.Fatal("failed to start server", zap.Error(e.Start(":"+PORT)))
 }

@@ -2,8 +2,9 @@ package stores
 
 import (
 	"database/sql"
+	"github.com/zett-8/go-clean-echo/logger"
 	"github.com/zett-8/go-clean-echo/models"
-	"log"
+	"go.uber.org/zap"
 )
 
 type (
@@ -54,7 +55,7 @@ func (s *authorStore) Create(tx *sql.Tx, author *models.Author) (int64, error) {
 	}
 
 	if err != nil {
-		log.Println(err)
+		logger.Error("failed to create author", zap.Error(err))
 		return 0, err
 	}
 
