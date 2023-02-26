@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/stretchr/testify/assert"
+	"github.com/zett-8/go-clean-echo/logger"
 	"github.com/zett-8/go-clean-echo/models"
 	"github.com/zett-8/go-clean-echo/services"
 	"net/http"
@@ -25,7 +26,18 @@ func (m *MockAuthorService) DeleteAuthor(id int) error {
 	return m.MockDeleteAuthorById(id)
 }
 
+func setUp_author_test() func() {
+	logger.New()
+
+	return func() {
+		logger.Sync()
+		logger.Delete()
+	}
+}
+
 func TestGetAuthorsSuccessCase(t *testing.T) {
+	defer setUp_author_test()()
+
 	s := &MockAuthorService{
 		MockGetAuthors: func() ([]models.Author, error) {
 			var r []models.Author
@@ -33,7 +45,7 @@ func TestGetAuthorsSuccessCase(t *testing.T) {
 		},
 	}
 
-	mockService := &services.Services{AuthorService: s}
+	mockService := &services.Services{Author: s}
 
 	e := Echo()
 	h := New(mockService)
@@ -47,6 +59,8 @@ func TestGetAuthorsSuccessCase(t *testing.T) {
 }
 
 func TestGetAuthors500Case(t *testing.T) {
+	defer setUp_author_test()()
+
 	s := &MockAuthorService{
 		MockGetAuthors: func() ([]models.Author, error) {
 			var r []models.Author
@@ -54,7 +68,7 @@ func TestGetAuthors500Case(t *testing.T) {
 		},
 	}
 
-	mockService := &services.Services{AuthorService: s}
+	mockService := &services.Services{Author: s}
 
 	e := Echo()
 	h := New(mockService)
@@ -68,13 +82,15 @@ func TestGetAuthors500Case(t *testing.T) {
 }
 
 func TestDeleteAuthorSuccessCase(t *testing.T) {
+	defer setUp_author_test()()
+
 	s := &MockAuthorService{
 		MockDeleteAuthorById: func(id int) error {
 			return nil
 		},
 	}
 
-	mockService := &services.Services{AuthorService: s}
+	mockService := &services.Services{Author: s}
 
 	e := Echo()
 	h := New(mockService)
@@ -91,13 +107,15 @@ func TestDeleteAuthorSuccessCase(t *testing.T) {
 }
 
 func TestDeleteAuthor400Case(t *testing.T) {
+	defer setUp_author_test()()
+
 	s := &MockAuthorService{
 		MockDeleteAuthorById: func(id int) error {
 			return nil
 		},
 	}
 
-	mockService := &services.Services{AuthorService: s}
+	mockService := &services.Services{Author: s}
 
 	e := Echo()
 	h := New(mockService)
@@ -112,13 +130,15 @@ func TestDeleteAuthor400Case(t *testing.T) {
 }
 
 func TestDeleteAuthor404Case(t *testing.T) {
+	defer setUp_author_test()()
+
 	s := &MockAuthorService{
 		MockDeleteAuthorById: func(id int) error {
 			return sql.ErrNoRows
 		},
 	}
 
-	mockService := &services.Services{AuthorService: s}
+	mockService := &services.Services{Author: s}
 
 	e := Echo()
 	h := New(mockService)
@@ -135,13 +155,15 @@ func TestDeleteAuthor404Case(t *testing.T) {
 }
 
 func TestDeleteAuthor500Case(t *testing.T) {
+	defer setUp_author_test()()
+
 	s := &MockAuthorService{
 		MockDeleteAuthorById: func(id int) error {
 			return errors.New("fake error")
 		},
 	}
 
-	mockService := &services.Services{AuthorService: s}
+	mockService := &services.Services{Author: s}
 
 	e := Echo()
 	h := New(mockService)

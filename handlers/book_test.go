@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/stretchr/testify/assert"
+	"github.com/zett-8/go-clean-echo/logger"
 	"github.com/zett-8/go-clean-echo/models"
 	"github.com/zett-8/go-clean-echo/services"
 	"net/http"
@@ -25,7 +26,18 @@ func (m *MockBookService) DeleteBookById(id int) error {
 	return m.MockDeleteBookById(id)
 }
 
+func setUp_book_test() func() {
+	logger.New()
+
+	return func() {
+		logger.Sync()
+		logger.Delete()
+	}
+}
+
 func TestGetBooksSuccessCase(t *testing.T) {
+	defer setUp_book_test()()
+
 	s := &MockBookService{
 		MockGetBooks: func() ([]models.Book, error) {
 			var r []models.Book
@@ -33,7 +45,7 @@ func TestGetBooksSuccessCase(t *testing.T) {
 		},
 	}
 
-	mockService := &services.Services{BookService: s}
+	mockService := &services.Services{Book: s}
 
 	e := Echo()
 	h := New(mockService)
@@ -47,6 +59,8 @@ func TestGetBooksSuccessCase(t *testing.T) {
 }
 
 func TestGetBooks500Case(t *testing.T) {
+	defer setUp_book_test()()
+
 	s := &MockBookService{
 		MockGetBooks: func() ([]models.Book, error) {
 			var r []models.Book
@@ -54,7 +68,7 @@ func TestGetBooks500Case(t *testing.T) {
 		},
 	}
 
-	mockService := &services.Services{BookService: s}
+	mockService := &services.Services{Book: s}
 
 	e := Echo()
 	h := New(mockService)
@@ -68,13 +82,15 @@ func TestGetBooks500Case(t *testing.T) {
 }
 
 func TestDeleteBookSuccessCase(t *testing.T) {
+	defer setUp_book_test()()
+
 	s := &MockBookService{
 		MockDeleteBookById: func(id int) error {
 			return nil
 		},
 	}
 
-	mockService := &services.Services{BookService: s}
+	mockService := &services.Services{Book: s}
 
 	e := Echo()
 	h := New(mockService)
@@ -91,13 +107,15 @@ func TestDeleteBookSuccessCase(t *testing.T) {
 }
 
 func TestDeleteBook400Case(t *testing.T) {
+	defer setUp_book_test()()
+
 	s := &MockBookService{
 		MockDeleteBookById: func(id int) error {
 			return nil
 		},
 	}
 
-	mockService := &services.Services{BookService: s}
+	mockService := &services.Services{Book: s}
 
 	e := Echo()
 	h := New(mockService)
@@ -112,13 +130,15 @@ func TestDeleteBook400Case(t *testing.T) {
 }
 
 func TestDeleteBook404Case(t *testing.T) {
+	defer setUp_book_test()()
+
 	s := &MockBookService{
 		MockDeleteBookById: func(id int) error {
 			return sql.ErrNoRows
 		},
 	}
 
-	mockService := &services.Services{BookService: s}
+	mockService := &services.Services{Book: s}
 
 	e := Echo()
 	h := New(mockService)
@@ -135,13 +155,15 @@ func TestDeleteBook404Case(t *testing.T) {
 }
 
 func TestDeleteBook500Case(t *testing.T) {
+	defer setUp_book_test()()
+
 	s := &MockBookService{
 		MockDeleteBookById: func(id int) error {
 			return errors.New("fake error")
 		},
 	}
 
-	mockService := &services.Services{BookService: s}
+	mockService := &services.Services{Book: s}
 
 	e := Echo()
 	h := New(mockService)
