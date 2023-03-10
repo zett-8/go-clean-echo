@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/zett-8/go-clean-echo/db"
 	"github.com/zett-8/go-clean-echo/models"
+	"github.com/zett-8/go-clean-echo/stores"
 	"testing"
 )
 
@@ -27,7 +28,7 @@ func TestAuthorStore_GetSuccessCase(t *testing.T) {
 		ExpectQuery("SELECT id, name, country from authors").
 		WillReturnRows(rows)
 
-	s := New(mockDB)
+	s := stores.New(mockDB)
 
 	r, err := s.Author.Get(nil)
 
@@ -54,7 +55,7 @@ func TestAuthorStore_CreateSuccessCase(t *testing.T) {
 			sqlmock.NewRows([]string{"id"}).AddRow(1),
 		)
 
-	s := New(mockDB)
+	s := stores.New(mockDB)
 
 	r, err := s.Author.Create(nil, a)
 
@@ -86,7 +87,7 @@ func TestAuthorStore_UpdateByIdSuccessCase(t *testing.T) {
 			sqlmock.NewRows([]string{"id"}).AddRow(a.ID),
 		)
 
-	s := New(mockDB)
+	s := stores.New(mockDB)
 
 	r, err := s.Author.UpdateById(nil, a)
 
@@ -119,7 +120,7 @@ func TestAuthorStore_DeleteByIdSuccessCase(t *testing.T) {
 		WithArgs(deletingID).
 		WillReturnResult(sqlmock.NewResult(int64(deletingID), 0))
 
-	s := New(mockDB)
+	s := stores.New(mockDB)
 
 	assert.NoError(t, s.Author.DeleteById(nil, deletingID))
 	assert.Equal(t, s.Author.DeleteById(nil, deletingID), sql.ErrNoRows)

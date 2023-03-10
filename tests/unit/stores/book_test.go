@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/zett-8/go-clean-echo/db"
 	"github.com/zett-8/go-clean-echo/models"
+	"github.com/zett-8/go-clean-echo/stores"
 	"testing"
 )
 
@@ -27,7 +28,7 @@ func TestBookStore_GetSuccessCase(t *testing.T) {
 		ExpectQuery("SELECT id, name, author_id from books").
 		WillReturnRows(rows)
 
-	s := New(mockDB)
+	s := stores.New(mockDB)
 
 	r, err := s.Book.Get(nil)
 
@@ -60,7 +61,7 @@ func TestBookStore_DeleteByIdSuccessCase(t *testing.T) {
 		WithArgs(deletingID).
 		WillReturnResult(sqlmock.NewResult(int64(deletingID), 0))
 
-	s := New(mockDB)
+	s := stores.New(mockDB)
 
 	assert.NoError(t, s.Book.DeleteById(nil, deletingID))
 	assert.Equal(t, s.Book.DeleteById(nil, deletingID), sql.ErrNoRows)

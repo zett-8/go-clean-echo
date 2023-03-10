@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/stretchr/testify/assert"
+	"github.com/zett-8/go-clean-echo/handlers"
 	"github.com/zett-8/go-clean-echo/logger"
 	"github.com/zett-8/go-clean-echo/models"
 	"github.com/zett-8/go-clean-echo/services"
@@ -47,8 +48,8 @@ func TestGetBooksSuccessCase(t *testing.T) {
 
 	mockService := &services.Services{Book: s}
 
-	e := Echo()
-	h := New(mockService)
+	e := handlers.Echo()
+	h := handlers.New(mockService)
 
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/book", nil)
 	rec := httptest.NewRecorder()
@@ -70,8 +71,8 @@ func TestGetBooks500Case(t *testing.T) {
 
 	mockService := &services.Services{Book: s}
 
-	e := Echo()
-	h := New(mockService)
+	e := handlers.Echo()
+	h := handlers.New(mockService)
 
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/book", nil)
 	rec := httptest.NewRecorder()
@@ -92,8 +93,8 @@ func TestDeleteBookSuccessCase(t *testing.T) {
 
 	mockService := &services.Services{Book: s}
 
-	e := Echo()
-	h := New(mockService)
+	e := handlers.Echo()
+	h := handlers.New(mockService)
 
 	req := httptest.NewRequest(http.MethodDelete, "/", nil)
 	rec := httptest.NewRecorder()
@@ -117,8 +118,8 @@ func TestDeleteBook400Case(t *testing.T) {
 
 	mockService := &services.Services{Book: s}
 
-	e := Echo()
-	h := New(mockService)
+	e := handlers.Echo()
+	h := handlers.New(mockService)
 
 	req := httptest.NewRequest(http.MethodDelete, "/", nil)
 	rec := httptest.NewRecorder()
@@ -140,8 +141,8 @@ func TestDeleteBook404Case(t *testing.T) {
 
 	mockService := &services.Services{Book: s}
 
-	e := Echo()
-	h := New(mockService)
+	e := handlers.Echo()
+	h := handlers.New(mockService)
 
 	req := httptest.NewRequest(http.MethodDelete, "/", nil)
 	rec := httptest.NewRecorder()
@@ -165,8 +166,8 @@ func TestDeleteBook500Case(t *testing.T) {
 
 	mockService := &services.Services{Book: s}
 
-	e := Echo()
-	h := New(mockService)
+	e := handlers.Echo()
+	h := handlers.New(mockService)
 
 	req := httptest.NewRequest(http.MethodDelete, "/", nil)
 	rec := httptest.NewRecorder()

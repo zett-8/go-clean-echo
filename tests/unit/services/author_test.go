@@ -5,6 +5,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/zett-8/go-clean-echo/db"
 	"github.com/zett-8/go-clean-echo/models"
+	services2 "github.com/zett-8/go-clean-echo/services"
 	"github.com/zett-8/go-clean-echo/stores"
 	"testing"
 )
@@ -14,7 +15,7 @@ func TestAuthorServiceContext_CreateAuthorWithBooks_Success(t *testing.T) {
 	defer mockDB.Close()
 
 	s := stores.New(mockDB)
-	services := New(s)
+	services := services2.New(s)
 
 	a := &models.Author{
 		Name:    "test",
