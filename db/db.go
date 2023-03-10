@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"embed"
 	_ "embed"
-	"fmt"
 	"github.com/DATA-DOG/go-sqlmock"
 	_ "github.com/lib/pq"
 	"github.com/pressly/goose/v3"
@@ -44,24 +43,24 @@ func New(development bool) (*sql.DB, error) {
 	if development {
 		seedFiles, err := ioutil.ReadDir("db/seed/")
 		if err != nil {
-			fmt.Println(err)
+			logger.Error("failed to read seed files", zap.Error(err))
 		}
 
 		for _, f := range seedFiles {
 			c, err := ioutil.ReadFile("db/seed/" + f.Name())
 			if err != nil {
-				fmt.Println(err)
+				logger.Error("failed to read seed file", zap.Error(err))
 			}
 
 			sqlCode := string(c)
 
 			_, err = db.Exec(sqlCode)
 			if err != nil {
-				fmt.Println(err)
+				logger.Error("failed to seed database", zap.Error(err))
 			}
 		}
 
-		fmt.Println("seeded database")
+		logger.Info("seeded database")
 	}
 
 	err = db.Ping()

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	database "github.com/zett-8/go-clean-echo/db"
 	_ "github.com/zett-8/go-clean-echo/docs"
 	"github.com/zett-8/go-clean-echo/handlers"
@@ -25,8 +24,6 @@ var GO_ENV = os.Getenv("GO_ENV")
 // @BasePath /
 // @schemes http
 func main() {
-	fmt.Println("GO_ENV:", GO_ENV)
-
 	err := logger.New()
 	if err != nil {
 		log.Fatal(err)
