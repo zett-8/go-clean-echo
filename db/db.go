@@ -3,17 +3,16 @@ package db
 import (
 	"database/sql"
 	"embed"
-	_ "embed"
 	"github.com/DATA-DOG/go-sqlmock"
 	_ "github.com/lib/pq"
-	"github.com/pressly/goose/v3"
+	migrate "github.com/rubenv/sql-migrate"
 	"github.com/zett-8/go-clean-echo/logger"
 	"go.uber.org/zap"
 	"io/ioutil"
 )
 
 //go:embed migrations/*.sql
-var migrations embed.FS
+var migrationsFS embed.FS
 
 func New(development bool) (*sql.DB, error) {
 	var uri string
@@ -28,14 +27,12 @@ func New(development bool) (*sql.DB, error) {
 		return nil, err
 	}
 
-	if err := goose.SetDialect("postgres"); err != nil {
-		db.Close()
-		return nil, err
+	migrations := &migrate.EmbedFileSystemMigrationSource{
+		FileSystem: migrationsFS,
+		Root:       "migrations",
 	}
-	goose.SetBaseFS(migrations)
 
-	if err := goose.Up(db, "migrations"); err != nil {
-		db.Close()
+	if _, err := migrate.Exec(db, "postgres", migrations, migrate.Up); err != nil {
 		return nil, err
 	}
 

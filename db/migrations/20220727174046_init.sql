@@ -1,5 +1,4 @@
--- +goose Up
--- +goose StatementBegin
+-- +migrate Up
 CREATE table authors (
     id SERIAL,
     name text,
@@ -14,10 +13,7 @@ CREATE TABLE books (
     CONSTRAINT book_pk PRIMARY KEY(id),
     CONSTRAINT book_to_author FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE CASCADE
 );
--- +goose StatementEnd
 
--- +goose Down
--- +goose StatementBegin
+-- +migrate Down
 DROP TABLE books;
 DROP TABLE authors;
--- +goose StatementEnd

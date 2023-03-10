@@ -17,7 +17,7 @@ This makes it super easy to replace each layer. (also good for testing)
 - [x] Clean architecture
 - [x] zap([uber-go/zap](https://github.com/uber-go/zap)) for logging
 - [x] swagger([swaggo/echo-swagger](https://github.com/swaggo/echo-swagger)) for documentation
-- [x] goose([pressly/goose](https://github.com/pressly/goose)) for migration
+- [x] sql-migrate([rubenv/sql-migrate](https://github.com/rubenv/sql-migrate)) for migration
 - [x] Database transaction in service layer
 - [x] sqlmock ([DATA-DOG/go-sqlmock](https://github.com/DATA-DOG/go-sqlmock)) for testing
 - [x] Multi-stage build for optimized docker image
